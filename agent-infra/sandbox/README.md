@@ -35,27 +35,6 @@ microVM 底层结构
 
 > 核心认识：**管理沙箱**和**隔离沙箱**是两个不同层面。
 
-### 1.1 云上 Kubernetes 容器集群的基础设施分层
-
-![云上 Kubernetes 容器集群基础设施架构](./assets/kubernetes-infrastructure-stack.png)
-
-云上常见主路径是：物理基础设施提供 CPU、内存、网络和存储；IaaS 与 KVM/QEMU 创建虚拟机；虚拟机中的 Guest Linux 作为 Kubernetes Worker Node；Control Plane 为 Pod 选择 Node，目标节点上的 kubelet 再通过 CRI 调用 containerd 或 CRI-O，配合 CNI、CSI 和 runc 创建 Pod。
-
-图中需要注意三个边界：
-
-- **VM 镜像与容器镜像不同**：前者由 IaaS 用来创建 VM 系统盘，后者由节点上的容器运行时从 Registry 拉取。
-- **Scheduler 与 kubelet 分工不同**：Scheduler 只选择 Node，kubelet 才负责在目标节点协调 Pod 的实际创建。
-- **虚拟化不是必经层**：Kubernetes Worker Node 也可以直接部署在 BMS 上，跳过 KVM/QEMU 和 VM。
-
-| Worker Node 路径 | 适合场景 | 主要取舍 |
-|---|---|---|
-| VM 节点 | 托管 K8s、多租户、弹性扩缩、故障迁移 | 管理灵活，但多一层虚拟化与 VM 启动开销 |
-| 裸金属节点 | GPU、RDMA、DPDK、低延迟、高吞吐、确定性性能 | 性能和硬件直通更好，但装机、扩缩和运维更重 |
-
-生产环境常采用混合形态：普通计算节点使用 VM，GPU、RDMA 或对抖动敏感的节点使用裸金属。
-
-> 核心认识：BMS 是 Bare Metal Server；BMC 才是负责远程开关机和硬件监控的带外管理控制器。
-
 ---
 
 ## 2. microVM 的底层结构
