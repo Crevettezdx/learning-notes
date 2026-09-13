@@ -6,19 +6,23 @@
 
 - [Agent 沙箱学习笔记](./agent-infra/sandbox/README.md)：12 个独立学习单元，覆盖基础架构、冷启动、预热池、快照与组合策略，另附术语速查和项目引子。
 
+## Model Architecture
+
+- [DeepSeek-V4.1-Flash 架构学习笔记](./model-architecture/deepseek-v4.1-flash/README.md)：围绕长任务 Agent，梳理 CED、CSA2、分层稀疏索引、SWA Bounded Replay、后训练与系统启示。
+
 ## 目录约定
 
 ```text
 learning-notes/
 ├── README.md
-└── agent-infra/
-    └── sandbox/
+├── agent-infra/
+│   └── sandbox/                      # Agent 沙箱专题
+└── model-architecture/
+    └── deepseek-v4.1-flash/          # 模型架构专题
         ├── README.md                 # 主题目录与阅读路径
-        ├── glossary.md               # 术语速查
-        ├── 01-kubernetes-on-vm.md     # 独立学习单元
-        ├── …                         # 其余学习单元
-        ├── appendix-opensandbox.md   # 项目附录
-        └── assets/                   # 共用图片
+        ├── 00-论文总览.md
+        ├── …                         # 独立学习单元
+        └── assets/                   # 正文引用图片
 ```
 
 - 每个主题使用独立目录，主题 README 作为入口。
