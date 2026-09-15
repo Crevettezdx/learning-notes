@@ -2,6 +2,10 @@
 
 用于持续沉淀个人技术学习笔记。按技术领域组织，每个学习单元聚焦一个问题，以结构图配合精简说明。
 
+## Programming Foundations
+
+- [Python asyncio 学习笔记](./programming/python/asyncio/README.md)：梳理协程、Task、Future、事件循环与完成通知如何协作。
+
 ## Agent Infra
 
 - [Agent 沙箱学习笔记](./agent-infra/sandbox/README.md)：12 个独立学习单元，覆盖基础架构、冷启动、预热池、快照与组合策略，另附术语速查和项目引子。
@@ -15,6 +19,9 @@
 ```text
 learning-notes/
 ├── README.md
+├── programming/
+│   └── python/
+│       └── asyncio/                  # Python asyncio 运行机制专题
 ├── agent-infra/
 │   └── sandbox/                      # Agent 沙箱专题
 └── model-architecture/
