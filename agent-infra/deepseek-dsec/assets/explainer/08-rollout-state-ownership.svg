@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 980" role="img" aria-labelledby="t d">
+  <title id="t">Rollout 的执行状态从 GPU 训练 Pod 移到 DSec</title>
+  <desc id="d">上方是 Agent RL 的交互链：模型生成、Agent loop、沙箱执行、轨迹、奖励与参数更新。下方对照旧版与 V4.1：旧版 Agent loop 位于可抢占 GPU Pod，抢占后消失而沙箱仍在；V4.1 的 worker container 和 agent sandbox 都位于 DSec，共同保存 rollout 状态，新 GPU 作业可重新连接。</desc>
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0,0 10,4 0,8" fill="#587da3"/></marker>
+    <marker id="m" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0,0 10,4 0,8" fill="#8292a2"/></marker>
+  </defs>
+  <rect width="1600" height="980" fill="#f6f7f9"/>
+  <text x="56" y="58" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="33" font-weight="700">Rollout 的执行状态从 GPU 训练 Pod 移到 DSec</text>
+  <text x="56" y="96" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19">GPU 继续提供模型计算；改变的是 Agent 交互过程由谁承载、由谁保存</text>
+
+  <rect x="56" y="126" width="1488" height="166" rx="8" fill="#fff" stroke="#c7d2de" stroke-width="2"/>
+  <text x="80" y="160" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">Agent RL 中，一次 rollout 如何产生</text>
+  <path d="M 326 229 H 359 M 618 229 H 651 M 910 229 H 943 M 1202 229 H 1235" fill="none" stroke="#587da3" stroke-width="2.5" marker-end="url(#a)"/>
+  <rect x="80" y="188" width="246" height="82" rx="7" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.6"/>
+  <rect x="359" y="188" width="259" height="82" rx="7" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.6"/>
+  <rect x="651" y="188" width="259" height="82" rx="7" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.6"/>
+  <rect x="943" y="188" width="259" height="82" rx="7" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.6"/>
+  <rect x="1235" y="188" width="285" height="82" rx="7" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.6"/>
+  <text x="203" y="222" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">模型生成</text>
+  <text x="203" y="249" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">下一步动作</text>
+  <text x="489" y="222" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">Agent 交互循环</text>
+  <text x="489" y="249" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">组织多轮交互</text>
+  <text x="780" y="222" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">沙箱</text>
+  <text x="780" y="249" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">执行工具，返回观察</text>
+  <text x="1073" y="222" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">交互轨迹</text>
+  <text x="1073" y="249" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">动作与结果的记录</text>
+  <text x="1378" y="222" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">奖励与参数更新</text>
+  <text x="1378" y="249" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">训练当前模型</text>
+
+  <rect x="56" y="328" width="1488" height="280" rx="8" fill="#fff" stroke="#c7d2de" stroke-width="2"/>
+  <text x="80" y="366" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="23" font-weight="700">旧版 · Agent loop 与训练作业一起被抢占</text>
+  <rect x="80" y="390" width="708" height="192" rx="7" fill="#f9fbfd" stroke="#aebdcb" stroke-width="1.5"/>
+  <rect x="836" y="390" width="684" height="192" rx="7" fill="#f9fbfd" stroke="#aebdcb" stroke-width="1.5"/>
+  <text x="102" y="424" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">可抢占 GPU 训练 Pod</text>
+  <text x="858" y="424" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">DSec</text>
+  <path d="M 760 490 H 885" fill="none" stroke="#8292a2" stroke-width="2.5" marker-end="url(#m)"/>
+  <rect x="104" y="447" width="198" height="86" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="321" y="447" width="198" height="86" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="538" y="447" width="222" height="86" rx="6" fill="#fff2ef" stroke="#bf8679" stroke-width="1.8"/>
+  <rect x="885" y="447" width="608" height="86" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <text x="203" y="484" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">Model serving</text>
+  <text x="420" y="484" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">RL framework</text>
+  <text x="649" y="484" text-anchor="middle" fill="#834d43" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">Agent loop</text>
+  <text x="1189" y="484" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">沙箱 · 文件与进程状态</text>
+  <text x="434" y="563" text-anchor="middle" fill="#834d43" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">Pod 被抢占 → Agent loop 消失</text>
+  <text x="1189" y="563" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">沙箱仍在 → 需用命令日志对齐状态</text>
+
+  <rect x="56" y="646" width="1488" height="280" rx="8" fill="#fff" stroke="#c7d2de" stroke-width="2"/>
+  <text x="80" y="684" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="23" font-weight="700">V4.1 起 · DSec 保存完整 rollout 状态</text>
+  <rect x="80" y="708" width="502" height="192" rx="7" fill="#f9fbfd" stroke="#aebdcb" stroke-width="1.5"/>
+  <rect x="630" y="708" width="890" height="192" rx="7" fill="#f9fbfd" stroke="#aebdcb" stroke-width="1.5"/>
+  <text x="102" y="742" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">可抢占 GPU 训练侧</text>
+  <text x="652" y="742" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">DSec · GPU 池外</text>
+  <path d="M 554 808 H 680 M 1026 808 H 1080" fill="none" stroke="#587da3" stroke-width="2.5" marker-end="url(#a)"/>
+  <rect x="104" y="765" width="205" height="86" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="327" y="765" width="227" height="86" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="680" y="765" width="346" height="86" rx="6" fill="#eaf2fa" stroke="#6b95bb" stroke-width="1.8"/>
+  <rect x="1080" y="765" width="413" height="86" rx="6" fill="#eaf2fa" stroke="#6b95bb" stroke-width="1.8"/>
+  <text x="207" y="800" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">Model serving</text>
+  <text x="441" y="800" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">RL framework</text>
+  <text x="853" y="797" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">Worker container</text>
+  <text x="853" y="825" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">通用控制层：管理沙箱</text>
+  <text x="1287" y="797" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">Agent sandbox</text>
+  <text x="1287" y="825" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">Harness 等：模型 ↔ 工具交互</text>
+  <text x="321" y="880" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">作业重启后重新连接</text>
+  <text x="1074" y="880" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">Worker + 沙箱共同保留状态，rollout 接着运行</text>
+</svg>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="sandbox-backends-title sandbox-backends-desc">
+  <title id="sandbox-backends-title">DSec 四种沙箱后端的结构区别</title>
+  <desc id="sandbox-backends-desc">四列以一台物理机为底座。FnCall 与容器列的两个容器位于同一个父虚拟机内并共享该虚拟机的 Linux 内核。microVM 和完整虚拟机列各画两个虚拟机实例，每个实例拥有自己的 Guest Kernel 和虚拟机监控器。完整虚拟机还呈现更完整的操作系统服务和图形设备。</desc>
+  <defs><style>@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap');</style></defs>
+  <rect width="1280" height="720" fill="#f5f5f5"/>
+  <text x="40" y="52" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="28" font-weight="600" fill="#2d3142" text-anchor="start">四种后端：内核由谁共享，环境由谁独占</text>
+  <text x="40" y="80" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="16" font-weight="400" fill="#4f5d75" text-anchor="start">每列 1 台 BMS；各示意 2 个运行实例。</text>
+  <rect x="40" y="112" width="276" height="512" rx="8" fill="#ffffff" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="56" y="144" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="24" font-weight="600" fill="#2d3142" text-anchor="start">FnCall</text>
+  <text x="56" y="168" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="16" font-weight="400" fill="#4f5d75" text-anchor="start">复用预建容器</text>
+  <line x1="40" y1="180" x2="316" y2="180" stroke="#c7cbd2" stroke-width="1"/>
+  <rect x="348" y="112" width="276" height="512" rx="8" fill="#ffffff" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="364" y="144" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="24" font-weight="600" fill="#2d3142" text-anchor="start">Container</text>
+  <text x="364" y="168" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="16" font-weight="400" fill="#4f5d75" text-anchor="start">有状态容器</text>
+  <line x1="348" y1="180" x2="624" y2="180" stroke="#c7cbd2" stroke-width="1"/>
+  <rect x="656" y="112" width="276" height="512" rx="8" fill="#ffffff" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="672" y="144" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="24" font-weight="600" fill="#2d3142" text-anchor="start">microVM</text>
+  <text x="672" y="168" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="16" font-weight="400" fill="#4f5d75" text-anchor="start">独立 Linux 内核</text>
+  <line x1="656" y1="180" x2="932" y2="180" stroke="#c7cbd2" stroke-width="1"/>
+  <rect x="964" y="112" width="276" height="512" rx="8" fill="#ffffff" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="980" y="144" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="24" font-weight="600" fill="#2d3142" text-anchor="start">Full VM</text>
+  <text x="980" y="168" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="16" font-weight="400" fill="#4f5d75" text-anchor="start">独立完整 OS</text>
+  <line x1="964" y1="180" x2="1240" y2="180" stroke="#c7cbd2" stroke-width="1"/>
+  <rect x="52" y="192" width="252" height="280" rx="6" fill="#fbfbfc" stroke="#8993a4" stroke-width="1.2" stroke-dasharray="6 4"/>
+  <text x="64" y="212" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="12" font-weight="600" fill="#4f5d75" text-anchor="start">共享的父 VM</text>
+  <rect x="64" y="228" width="104" height="96" rx="5" fill="#ffffff" stroke="#8993a4" stroke-width="1"/>
+  <text x="116" y="256" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="middle">预建容器 A</text>
+  <text x="116" y="288" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle">单次任务</text>
+  <rect x="188" y="228" width="104" height="96" rx="5" fill="#ffffff" stroke="#8993a4" stroke-width="1"/>
+  <text x="240" y="256" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="middle">预建容器 B</text>
+  <text x="240" y="288" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle">单次任务</text>
+  <rect x="64" y="340" width="228" height="52" rx="5" fill="#2d3142" stroke="#2d3142" stroke-width="1"/>
+  <text x="178" y="372" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="16" font-weight="600" fill="#ffffff" text-anchor="middle">共享的 VM Linux 内核</text>
+  <rect x="64" y="404" width="228" height="52" rx="5" fill="#eef0f2" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="178" y="436" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="14" font-weight="500" fill="#2d3142" text-anchor="middle">共享虚拟设备 / 网络</text>
+  <rect x="52" y="492" width="252" height="52" rx="5" fill="#eef0f2" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="178" y="524" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="16" font-weight="600" fill="#2d3142" text-anchor="middle">QEMU / libvirt ×1</text>
+  <rect x="52" y="560" width="252" height="52" rx="5" fill="#f7f7f8" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="178" y="592" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="16" font-weight="600" fill="#2d3142" text-anchor="middle">BMS / 物理机</text>
+  <rect x="360" y="192" width="252" height="280" rx="6" fill="#fbfbfc" stroke="#8993a4" stroke-width="1.2" stroke-dasharray="6 4"/>
+  <text x="372" y="212" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="12" font-weight="600" fill="#4f5d75" text-anchor="start">共享的父 VM</text>
+  <rect x="372" y="228" width="104" height="96" rx="5" fill="#ffffff" stroke="#8993a4" stroke-width="1"/>
+  <text x="424" y="256" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="middle">容器 A</text>
+  <text x="424" y="288" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle">进程 + 根FS</text>
+  <rect x="496" y="228" width="104" height="96" rx="5" fill="#ffffff" stroke="#8993a4" stroke-width="1"/>
+  <text x="548" y="256" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="middle">容器 B</text>
+  <text x="548" y="288" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="12" font-weight="400" fill="#4f5d75" text-anchor="middle">进程 + 根FS</text>
+  <rect x="372" y="340" width="228" height="52" rx="5" fill="#2d3142" stroke="#2d3142" stroke-width="1"/>
+  <text x="486" y="372" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="16" font-weight="600" fill="#ffffff" text-anchor="middle">共享的 VM Linux 内核</text>
+  <rect x="372" y="404" width="228" height="52" rx="5" fill="#eef0f2" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="486" y="436" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="14" font-weight="500" fill="#2d3142" text-anchor="middle">共享虚拟设备 / 网络</text>
+  <rect x="360" y="492" width="252" height="52" rx="5" fill="#eef0f2" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="486" y="524" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="16" font-weight="600" fill="#2d3142" text-anchor="middle">QEMU / libvirt ×1</text>
+  <rect x="360" y="560" width="252" height="52" rx="5" fill="#f7f7f8" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="486" y="592" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="16" font-weight="600" fill="#2d3142" text-anchor="middle">BMS / 物理机</text>
+  <rect x="668" y="192" width="120" height="280" rx="6" fill="#fbfbfc" stroke="#8993a4" stroke-width="1.2" stroke-dasharray="6 4"/>
+  <text x="728" y="212" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="12" font-weight="600" fill="#4f5d75" text-anchor="middle">microVM A</text>
+  <rect x="676" y="228" width="104" height="40" rx="4" fill="#ffffff" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="728" y="254" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="500" fill="#2d3142" text-anchor="middle">任务 / 应用</text>
+  <rect x="676" y="276" width="104" height="52" rx="4" fill="#ffffff" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="728" y="308" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="500" fill="#2d3142" text-anchor="middle">Linux 用户态</text>
+  <rect x="676" y="340" width="104" height="52" rx="4" fill="#2d3142" stroke="#2d3142" stroke-width="1"/>
+  <text x="728" y="372" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#ffffff" text-anchor="middle">Guest Kernel</text>
+  <rect x="676" y="404" width="104" height="52" rx="4" fill="#eef0f2" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="728" y="436" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="500" fill="#2d3142" text-anchor="middle">最小虚拟设备</text>
+  <rect x="668" y="492" width="120" height="52" rx="5" fill="#eef0f2" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="728" y="524" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="middle">Firecracker</text>
+  <rect x="800" y="192" width="120" height="280" rx="6" fill="#fbfbfc" stroke="#8993a4" stroke-width="1.2" stroke-dasharray="6 4"/>
+  <text x="860" y="212" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="12" font-weight="600" fill="#4f5d75" text-anchor="middle">microVM B</text>
+  <rect x="808" y="228" width="104" height="40" rx="4" fill="#ffffff" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="860" y="254" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="500" fill="#2d3142" text-anchor="middle">任务 / 应用</text>
+  <rect x="808" y="276" width="104" height="52" rx="4" fill="#ffffff" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="860" y="308" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="500" fill="#2d3142" text-anchor="middle">Linux 用户态</text>
+  <rect x="808" y="340" width="104" height="52" rx="4" fill="#2d3142" stroke="#2d3142" stroke-width="1"/>
+  <text x="860" y="372" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#ffffff" text-anchor="middle">Guest Kernel</text>
+  <rect x="808" y="404" width="104" height="52" rx="4" fill="#eef0f2" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="860" y="436" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="500" fill="#2d3142" text-anchor="middle">最小虚拟设备</text>
+  <rect x="800" y="492" width="120" height="52" rx="5" fill="#eef0f2" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="860" y="524" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="middle">Firecracker</text>
+  <rect x="668" y="560" width="252" height="52" rx="5" fill="#f7f7f8" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="794" y="592" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="16" font-weight="600" fill="#2d3142" text-anchor="middle">BMS / 物理机</text>
+  <rect x="976" y="192" width="120" height="280" rx="6" fill="#fbfbfc" stroke="#8993a4" stroke-width="1.2" stroke-dasharray="6 4"/>
+  <text x="1036" y="212" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="12" font-weight="600" fill="#4f5d75" text-anchor="middle">Full VM A</text>
+  <rect x="984" y="228" width="104" height="40" rx="4" fill="#ffffff" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="1036" y="254" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="500" fill="#2d3142" text-anchor="middle">任务 / 应用</text>
+  <rect x="984" y="276" width="104" height="52" rx="4" fill="#fff4ee" stroke="#eb6c36" stroke-width="1"/>
+  <text x="1036" y="308" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="middle">完整 OS 服务</text>
+  <rect x="984" y="340" width="104" height="52" rx="4" fill="#2d3142" stroke="#2d3142" stroke-width="1"/>
+  <text x="1036" y="372" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#ffffff" text-anchor="middle">Guest Kernel</text>
+  <rect x="984" y="404" width="104" height="52" rx="4" fill="#fff4ee" stroke="#eb6c36" stroke-width="1"/>
+  <text x="1036" y="436" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="middle">图形 / 设备</text>
+  <rect x="976" y="492" width="120" height="52" rx="5" fill="#eef0f2" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="1036" y="524" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="middle">QEMU</text>
+  <rect x="1108" y="192" width="120" height="280" rx="6" fill="#fbfbfc" stroke="#8993a4" stroke-width="1.2" stroke-dasharray="6 4"/>
+  <text x="1168" y="212" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="12" font-weight="600" fill="#4f5d75" text-anchor="middle">Full VM B</text>
+  <rect x="1116" y="228" width="104" height="40" rx="4" fill="#ffffff" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="1168" y="254" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="500" fill="#2d3142" text-anchor="middle">任务 / 应用</text>
+  <rect x="1116" y="276" width="104" height="52" rx="4" fill="#fff4ee" stroke="#eb6c36" stroke-width="1"/>
+  <text x="1168" y="308" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="middle">完整 OS 服务</text>
+  <rect x="1116" y="340" width="104" height="52" rx="4" fill="#2d3142" stroke="#2d3142" stroke-width="1"/>
+  <text x="1168" y="372" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#ffffff" text-anchor="middle">Guest Kernel</text>
+  <rect x="1116" y="404" width="104" height="52" rx="4" fill="#fff4ee" stroke="#eb6c36" stroke-width="1"/>
+  <text x="1168" y="436" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="middle">图形 / 设备</text>
+  <rect x="1108" y="492" width="120" height="52" rx="5" fill="#eef0f2" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="1168" y="524" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="13" font-weight="600" fill="#2d3142" text-anchor="middle">QEMU</text>
+  <rect x="976" y="560" width="252" height="52" rx="5" fill="#f7f7f8" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="1102" y="592" font-family="&#x27;Geist&#x27;, &#x27;Helvetica Neue&#x27;, Arial, &#x27;Hiragino Sans&#x27;, &#x27;Noto Sans CJK SC&#x27;, sans-serif" font-size="16" font-weight="600" fill="#2d3142" text-anchor="middle">BMS / 物理机</text>
+  <line x1="40" y1="644" x2="1240" y2="644" stroke="#c7cbd2" stroke-width="1"/>
+  <text x="40" y="672" font-family="&#x27;Geist Mono&#x27;, Menlo, &#x27;Noto Sans Mono CJK SC&#x27;, monospace" font-size="13" font-weight="600" fill="#4f5d75" text-anchor="start">虚线：VM 边界</text>
+  
+  
+</svg>

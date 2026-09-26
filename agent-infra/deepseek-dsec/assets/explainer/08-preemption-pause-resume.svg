@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="t d">
+  <title id="t">训练暂停时保留沙箱状态，并收回空闲内存</title>
+  <desc id="d">同一条时间线上的两种沙箱后端。训练作业暂停后，RL framework 请求 DSec 暂停关联沙箱。容器用 docker pause 冻结进程，再通过交换与主动内存回收降低驻留内存；恢复前异步预取并 docker unpause。microVM 保存内存和执行状态快照，结束 Firecracker 进程；新请求到来时启动新进程并加载快照。两者都在执行下一次请求前恢复。</desc>
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0,0 10,4 0,8" fill="#587da3"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#f6f7f9"/>
+  <text x="56" y="58" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="33" font-weight="700">训练暂停时保留沙箱状态，并收回空闲内存</text>
+  <text x="56" y="96" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19">时间从左到右；下方两行是同一流程在容器与 microVM 上的不同实现</text>
+
+  <rect x="56" y="126" width="1488" height="106" rx="8" fill="#fff" stroke="#c7d2de" stroke-width="2"/>
+  <rect x="80" y="150" width="454" height="58" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="590" y="150" width="454" height="58" rx="6" fill="#eaf2fa" stroke="#6b95bb" stroke-width="1.8"/>
+  <rect x="1100" y="150" width="420" height="58" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <path d="M 534 179 H 590 M 1044 179 H 1100" fill="none" stroke="#587da3" stroke-width="2.5" marker-end="url(#a)"/>
+  <text x="307" y="186" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">GPU 作业暂停 / 被抢占</text>
+  <text x="817" y="186" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">RL framework 请求 DSec 暂停沙箱</text>
+  <text x="1310" y="186" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">新作业重连并发出请求</text>
+
+  <text x="78" y="284" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">沙箱后端</text>
+  <text x="344" y="284" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">① 运行中</text>
+  <text x="610" y="284" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">② 冻结 / 快照</text>
+  <text x="876" y="284" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">③ 收回内存</text>
+  <text x="1142" y="284" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">④ 下一次请求前恢复</text>
+  <text x="1408" y="284" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">⑤ 继续执行</text>
+
+  <rect x="56" y="310" width="1488" height="208" rx="8" fill="#fff" stroke="#c7d2de" stroke-width="2"/>
+  <text x="82" y="350" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="21" font-weight="700">Container</text>
+  <text x="82" y="381" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">进程留在节点</text>
+  <path d="M 454 410 H 500 M 720 410 H 766 M 986 410 H 1032 M 1252 410 H 1298" fill="none" stroke="#587da3" stroke-width="2.5" marker-end="url(#a)"/>
+  <rect x="234" y="366" width="220" height="88" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="500" y="366" width="220" height="88" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="766" y="366" width="220" height="88" rx="6" fill="#eaf2fa" stroke="#6b95bb" stroke-width="1.8"/>
+  <rect x="1032" y="366" width="220" height="88" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="1298" y="366" width="220" height="88" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <text x="344" y="401" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">进程运行</text>
+  <text x="344" y="429" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">持有内存与状态</text>
+  <text x="610" y="401" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">docker pause</text>
+  <text x="610" y="429" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">冻结进程树</text>
+  <text x="876" y="399" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">memory.swap.max</text>
+  <text x="876" y="427" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">memory.reclaim</text>
+  <text x="1142" y="399" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">MADV_WILLNEED</text>
+  <text x="1142" y="427" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">异步预取内存页</text>
+  <text x="1408" y="399" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">docker unpause</text>
+  <text x="1408" y="427" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">进程接着运行</text>
+  <text x="876" y="490" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">匿名页与文件页被回收；执行位置保持</text>
+
+  <rect x="56" y="548" width="1488" height="208" rx="8" fill="#fff" stroke="#c7d2de" stroke-width="2"/>
+  <text x="82" y="588" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="21" font-weight="700">microVM</text>
+  <text x="82" y="619" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">进程被结束</text>
+  <path d="M 454 648 H 500 M 720 648 H 766 M 986 648 H 1032 M 1252 648 H 1298" fill="none" stroke="#587da3" stroke-width="2.5" marker-end="url(#a)"/>
+  <rect x="234" y="604" width="220" height="88" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="500" y="604" width="220" height="88" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="766" y="604" width="220" height="88" rx="6" fill="#eaf2fa" stroke="#6b95bb" stroke-width="1.8"/>
+  <rect x="1032" y="604" width="220" height="88" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="1298" y="604" width="220" height="88" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <text x="344" y="639" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">Firecracker 运行</text>
+  <text x="344" y="667" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">Guest 继续执行</text>
+  <text x="610" y="637" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">保存快照</text>
+  <text x="610" y="665" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">内存 + 执行状态</text>
+  <text x="876" y="637" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">结束 Firecracker</text>
+  <text x="876" y="665" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">释放运行内存</text>
+  <text x="1142" y="637" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">启动新进程</text>
+  <text x="1142" y="665" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">加载状态快照</text>
+  <text x="1408" y="637" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">Guest 接着运行</text>
+  <text x="1408" y="665" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">处理下一次请求</text>
+  <text x="876" y="728" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">状态保存在快照中，不再占用运行中的 Guest 内存</text>
+
+  <rect x="56" y="790" width="1488" height="66" rx="7" fill="#eaf2fa" stroke="#6b95bb" stroke-width="1.5"/>
+  <text x="800" y="831" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">两条路径都保留执行状态：新请求先触发恢复，再进入沙箱执行</text>
+</svg>

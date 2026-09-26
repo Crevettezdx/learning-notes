@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1760 1540" role="img" aria-labelledby="microvm-compose-title microvm-compose-desc">
+<title id="microvm-compose-title">两个 microVM 如何组合只读环境并隔离写入</title>
+<desc id="microvm-compose-desc">创建请求动态选择 Base B1、Workspace W1 和 Toolkit T1。Edge 与 Firecracker 启动两个独立 Guest：Base 与 Toolkit 分别通过独立的只读 EROFS 设备进入 Guest 根文件系统的 OverlayFS Lower，根 Upper 位于可写 ext4 磁盘；Workspace W1 是另一个经 virtio-blk、ublk、OverlayBD 提供的任务专属 ext4 磁盘。A 修改 Toolkit 文件时由 Guest OverlayFS 复制到自己的根 Upper；修改 Workspace 文件时形成自己的 OverlayBD 本地增量。随后启动的 B 仍从共享基础镜像看到原始文件。</desc>
+<rect x="0" y="0" width="1760" height="1540" rx="0" fill="#f6f7f9" stroke="#f6f7f9" stroke-width="0"/>
+<text x="56" y="56" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="34" font-weight="700">同一环境起点，两个 microVM 的独立写入</text>
+<text x="56" y="92" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="400">动态选层 → A 独立写入 → B 仍读取未变的基础镜像</text>
+<rect x="56" y="128" width="1648" height="160" rx="8" fill="#ffffff" stroke="#b7c9da" stroke-width="1.4"/>
+<text x="80" y="158" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">环境构件目录</text>
+<text x="1680" y="158" fill="#5d83ad" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="600" text-anchor="end">本次请求：B1 + W1 + T1</text>
+<line x1="604" y1="176" x2="604" y2="252" stroke="#d6dee8" stroke-width="1.2"/>
+<line x1="1156" y1="176" x2="1156" y2="252" stroke="#d6dee8" stroke-width="1.2"/>
+<text x="80" y="188" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">Base images</text>
+<rect x="80" y="204" width="136" height="48" rx="5" fill="#edf3f9" stroke="#5d83ad" stroke-width="2"/>
+<circle cx="104" cy="228" r="11" fill="#5d83ad" stroke="#5d83ad" stroke-width="1"/>
+<text x="104" y="233" fill="#ffffff" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">✓</text>
+<text x="128" y="234" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">B1</text>
+<rect x="232" y="204" width="136" height="48" rx="5" fill="#f6f7f9" stroke="#d6dee8" stroke-width="1"/>
+<text x="252" y="234" fill="#8291a3" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="500">B2</text>
+<rect x="384" y="204" width="136" height="48" rx="5" fill="#f6f7f9" stroke="#d6dee8" stroke-width="1"/>
+<text x="404" y="234" fill="#8291a3" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="500">BM</text>
+<text x="632" y="188" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">Workspaces</text>
+<rect x="632" y="204" width="136" height="48" rx="5" fill="#edf3f9" stroke="#5d83ad" stroke-width="2"/>
+<circle cx="656" cy="228" r="11" fill="#5d83ad" stroke="#5d83ad" stroke-width="1"/>
+<text x="656" y="233" fill="#ffffff" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">✓</text>
+<text x="680" y="234" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">W1</text>
+<rect x="784" y="204" width="136" height="48" rx="5" fill="#f6f7f9" stroke="#d6dee8" stroke-width="1"/>
+<text x="804" y="234" fill="#8291a3" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="500">W2</text>
+<rect x="936" y="204" width="136" height="48" rx="5" fill="#f6f7f9" stroke="#d6dee8" stroke-width="1"/>
+<text x="956" y="234" fill="#8291a3" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="500">WN</text>
+<text x="1184" y="188" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">Toolkits</text>
+<rect x="1184" y="204" width="136" height="48" rx="5" fill="#edf3f9" stroke="#5d83ad" stroke-width="2"/>
+<circle cx="1208" cy="228" r="11" fill="#5d83ad" stroke="#5d83ad" stroke-width="1"/>
+<text x="1208" y="233" fill="#ffffff" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">✓</text>
+<text x="1232" y="234" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">T1</text>
+<rect x="1336" y="204" width="136" height="48" rx="5" fill="#f6f7f9" stroke="#d6dee8" stroke-width="1"/>
+<text x="1356" y="234" fill="#8291a3" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="500">T2</text>
+<rect x="1488" y="204" width="136" height="48" rx="5" fill="#f6f7f9" stroke="#d6dee8" stroke-width="1"/>
+<text x="1508" y="234" fill="#8291a3" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="500">TK</text>
+<line x1="148" y1="252" x2="148" y2="268" stroke="#5d83ad" stroke-width="2"/>
+<line x1="700" y1="252" x2="700" y2="268" stroke="#5d83ad" stroke-width="2"/>
+<line x1="1252" y1="252" x2="1252" y2="268" stroke="#5d83ad" stroke-width="2"/>
+<line x1="148" y1="268" x2="1252" y2="268" stroke="#5d83ad" stroke-width="2"/>
+<path d="M880 268 V324" fill="none" stroke="#5d83ad" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="880,328 874,316 886,316" fill="#5d83ad"/>
+<text x="900" y="310" fill="#5d83ad" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="600">选定版本</text>
+<rect x="704" y="328" width="352" height="100" rx="8" fill="#ffffff" stroke="#52657c" stroke-width="1.6"/>
+<text x="728" y="360" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="23" font-weight="700">Edge / Firecracker</text>
+<text x="728" y="388" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="500">B1、T1、W1 分别挂载</text>
+<text x="728" y="412" fill="#5d83ad" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="400">Guest A / Guest B 独立启动</text>
+<rect x="56" y="464" width="804" height="820" rx="10" fill="#ffffff" stroke="#c7d2de" stroke-width="1.5"/>
+<rect x="904" y="464" width="800" height="820" rx="10" fill="#ffffff" stroke="#c7d2de" stroke-width="1.5"/>
+<path d="M784 428 V460" fill="none" stroke="#5d83ad" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="784,464 778,452 790,452" fill="#5d83ad"/>
+<path d="M976 428 V460" fill="none" stroke="#5d83ad" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="976,464 970,452 982,452" fill="#5d83ad"/>
+<path d="M880 1328 V1308 H456 V1260" fill="none" stroke="#5d83ad" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="456,1256 450,1268 462,1268" fill="#5d83ad"/>
+<path d="M880 1308 H1304 V1260" fill="none" stroke="#5d83ad" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="1304,1256 1298,1268 1310,1268" fill="#5d83ad"/>
+<path d="M278 1152 V1044" fill="none" stroke="#5d83ad" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="278,1040 272,1052 284,1052" fill="#5d83ad"/>
+<path d="M642 1152 V964" fill="none" stroke="#5d83ad" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="642,960 636,972 648,972" fill="#5d83ad"/>
+<path d="M1126 1152 V1044" fill="none" stroke="#5d83ad" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="1126,1040 1120,1052 1132,1052" fill="#5d83ad"/>
+<path d="M1490 1152 V964" fill="none" stroke="#5d83ad" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="1490,960 1484,972 1496,972" fill="#5d83ad"/>
+<circle cx="100" cy="500" r="22" fill="#edf3f9" stroke="#5d83ad" stroke-width="1.3"/>
+<text x="100" y="508" fill="#5d83ad" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle">1</text>
+<text x="136" y="508" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="24" font-weight="700">microVM A · 先启动</text>
+<text x="820" y="507" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="600" text-anchor="end">独立 Guest Kernel</text>
+<circle cx="948" cy="500" r="22" fill="#edf3f9" stroke="#5d83ad" stroke-width="1.3"/>
+<text x="948" y="508" fill="#5d83ad" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle">3</text>
+<text x="984" y="508" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="24" font-weight="700">microVM B · 后启动</text>
+<text x="1664" y="507" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="600" text-anchor="end">同一组基础镜像</text>
+<rect x="80" y="536" width="752" height="112" rx="8" fill="#ffffff" stroke="#52657c" stroke-width="1.5"/>
+<text x="104" y="564" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">Guest 所见</text>
+<rect x="104" y="580" width="296" height="48" rx="5" fill="#edf3f9" stroke="#d6dee8" stroke-width="1"/>
+<text x="120" y="610" fill="#d36e49" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="600">根 / · tool.py v2</text>
+<rect x="416" y="580" width="392" height="48" rx="5" fill="#fff0e8" stroke="#d36e49" stroke-width="1.2"/>
+<path d="M432 590 H448 L456 598 V618 H432 Z" fill="#ffffff" stroke="#d36e49" stroke-width="1.5" stroke-linejoin="round"/>
+<line x1="448" y1="590" x2="448" y2="598" stroke="#d36e49" stroke-width="1.2"/>
+<line x1="448" y1="598" x2="456" y2="598" stroke="#d36e49" stroke-width="1.2"/>
+<text x="472" y="610" fill="#d36e49" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="650">/workspace/main.py v2</text>
+<text x="808" y="610" fill="#8291a3" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="end">× old.txt</text>
+<rect x="80" y="668" width="752" height="424" rx="8" fill="#f9fbfd" stroke="#b8c9d9" stroke-width="1.3"/>
+<text x="104" y="696" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">Guest Kernel</text>
+<rect x="104" y="712" width="348" height="352" rx="6" fill="#ffffff" stroke="#a9bfd4" stroke-width="1.2"/>
+<text x="124" y="744" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">根文件系统 /</text>
+<rect x="120" y="760" width="316" height="44" rx="5" fill="#dce8f5" stroke="#3f6f9f" stroke-width="2.2"/>
+<text x="278" y="789" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">OverlayFS · copy-up</text>
+<rect x="120" y="820" width="316" height="68" rx="5" fill="#fff0e8" stroke="#d36e49" stroke-width="1.4"/>
+<text x="136" y="846" fill="#d36e49" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">Upper · ext4 / virtio-blk</text>
+<text x="136" y="872" fill="#d36e49" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="600">tool.py v2</text>
+<rect x="120" y="904" width="316" height="136" rx="5" fill="#edf3f9" stroke="#a9bfd4" stroke-width="1.2"/>
+<text x="136" y="930" fill="#5d83ad" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">Lower · EROFS 只读</text>
+<rect x="136" y="944" width="284" height="38" rx="4" fill="#ffffff" stroke="#b6c9da" stroke-width="1"/>
+<text x="152" y="970" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="600">Toolkit T1</text>
+<text x="404" y="970" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="400" text-anchor="end">tool.py v1</text>
+<rect x="136" y="988" width="284" height="38" rx="4" fill="#ffffff" stroke="#b6c9da" stroke-width="1"/>
+<text x="152" y="1014" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="600">Base B1</text>
+<rect x="476" y="712" width="332" height="352" rx="6" fill="#ffffff" stroke="#a9bfd4" stroke-width="1.2"/>
+<text x="496" y="744" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">Workspace 挂载（示意）</text>
+<rect x="492" y="760" width="300" height="128" rx="5" fill="#fff0e8" stroke="#d36e49" stroke-width="1.4"/>
+<text x="508" y="790" fill="#d36e49" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">Workspace W1 · ext4 磁盘</text>
+<path d="M508 812 H524 L532 820 V840 H508 Z" fill="#ffffff" stroke="#d36e49" stroke-width="1.5" stroke-linejoin="round"/>
+<line x1="524" y1="812" x2="524" y2="820" stroke="#d36e49" stroke-width="1.2"/>
+<line x1="524" y1="820" x2="532" y2="820" stroke="#d36e49" stroke-width="1.2"/>
+<text x="548" y="833" fill="#d36e49" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="650">main.py v2</text>
+<text x="508" y="860" fill="#d36e49" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="500">old.txt 已删除</text>
+<rect x="492" y="904" width="300" height="56" rx="5" fill="#ffffff" stroke="#a9bfd4" stroke-width="1.2"/>
+<text x="642" y="939" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">virtio-blk</text>
+<rect x="80" y="1112" width="752" height="144" rx="8" fill="#f2f6fa" stroke="#b8c9d9" stroke-width="1.3"/>
+<text x="104" y="1140" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">节点宿主机</text>
+<rect x="104" y="1152" width="348" height="76" rx="5" fill="#ffffff" stroke="#a9bfd4" stroke-width="1.2"/>
+<text x="124" y="1182" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">virtio-pmem / DAX</text>
+<text x="124" y="1208" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="400">只读 EROFS 设备</text>
+<rect x="476" y="1152" width="332" height="76" rx="5" fill="#fff0e8" stroke="#d36e49" stroke-width="1.4"/>
+<text x="496" y="1182" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">ublk → OverlayBD</text>
+<text x="496" y="1208" fill="#d36e49" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="600">本地增量 ΔA：根盘 + Workspace</text>
+<rect x="928" y="536" width="752" height="112" rx="8" fill="#ffffff" stroke="#52657c" stroke-width="1.5"/>
+<text x="952" y="564" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">Guest 所见</text>
+<rect x="952" y="580" width="296" height="48" rx="5" fill="#edf3f9" stroke="#d6dee8" stroke-width="1"/>
+<text x="968" y="610" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="500">根 / · tool.py v1</text>
+<rect x="1264" y="580" width="392" height="48" rx="5" fill="#edf3f9" stroke="#d6dee8" stroke-width="1.2"/>
+<path d="M1280 590 H1296 L1304 598 V618 H1280 Z" fill="#ffffff" stroke="#5d83ad" stroke-width="1.5" stroke-linejoin="round"/>
+<line x1="1296" y1="590" x2="1296" y2="598" stroke="#5d83ad" stroke-width="1.2"/>
+<line x1="1296" y1="598" x2="1304" y2="598" stroke="#5d83ad" stroke-width="1.2"/>
+<text x="1320" y="610" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="500">/workspace/main.py v1</text>
+<text x="1656" y="610" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="end">old.txt</text>
+<rect x="928" y="668" width="752" height="424" rx="8" fill="#f9fbfd" stroke="#b8c9d9" stroke-width="1.3"/>
+<text x="952" y="696" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">Guest Kernel</text>
+<rect x="952" y="712" width="348" height="352" rx="6" fill="#ffffff" stroke="#a9bfd4" stroke-width="1.2"/>
+<text x="972" y="744" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">根文件系统 /</text>
+<rect x="968" y="760" width="316" height="44" rx="5" fill="#dce8f5" stroke="#3f6f9f" stroke-width="2.2"/>
+<text x="1126" y="789" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="21" font-weight="700" text-anchor="middle">OverlayFS</text>
+<rect x="968" y="820" width="316" height="68" rx="5" fill="#ffffff" stroke="#b8c6d4" stroke-width="1.2"/>
+<text x="984" y="846" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">Upper · ext4 / virtio-blk</text>
+<text x="984" y="872" fill="#8291a3" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="400">空</text>
+<rect x="968" y="904" width="316" height="136" rx="5" fill="#edf3f9" stroke="#a9bfd4" stroke-width="1.2"/>
+<text x="984" y="930" fill="#5d83ad" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">Lower · EROFS 只读</text>
+<rect x="984" y="944" width="284" height="38" rx="4" fill="#ffffff" stroke="#b6c9da" stroke-width="1"/>
+<text x="1000" y="970" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="600">Toolkit T1</text>
+<text x="1252" y="970" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="400" text-anchor="end">tool.py v1</text>
+<rect x="984" y="988" width="284" height="38" rx="4" fill="#ffffff" stroke="#b6c9da" stroke-width="1"/>
+<text x="1000" y="1014" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="600">Base B1</text>
+<rect x="1324" y="712" width="332" height="352" rx="6" fill="#ffffff" stroke="#a9bfd4" stroke-width="1.2"/>
+<text x="1344" y="744" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">Workspace 挂载（示意）</text>
+<rect x="1340" y="760" width="300" height="128" rx="5" fill="#edf3f9" stroke="#a9bfd4" stroke-width="1.4"/>
+<text x="1356" y="790" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">Workspace W1 · ext4 磁盘</text>
+<path d="M1356 812 H1372 L1380 820 V840 H1356 Z" fill="#ffffff" stroke="#5d83ad" stroke-width="1.5" stroke-linejoin="round"/>
+<line x1="1372" y1="812" x2="1372" y2="820" stroke="#5d83ad" stroke-width="1.2"/>
+<line x1="1372" y1="820" x2="1380" y2="820" stroke="#5d83ad" stroke-width="1.2"/>
+<text x="1396" y="833" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="500">main.py v1</text>
+<text x="1356" y="860" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="500">old.txt</text>
+<rect x="1340" y="904" width="300" height="56" rx="5" fill="#ffffff" stroke="#a9bfd4" stroke-width="1.2"/>
+<text x="1490" y="939" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">virtio-blk</text>
+<rect x="928" y="1112" width="752" height="144" rx="8" fill="#f2f6fa" stroke="#b8c9d9" stroke-width="1.3"/>
+<text x="952" y="1140" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">节点宿主机</text>
+<rect x="952" y="1152" width="348" height="76" rx="5" fill="#ffffff" stroke="#a9bfd4" stroke-width="1.2"/>
+<text x="972" y="1182" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">virtio-pmem / DAX</text>
+<text x="972" y="1208" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="400">只读 EROFS 设备</text>
+<rect x="1324" y="1152" width="332" height="76" rx="5" fill="#ffffff" stroke="#a9bfd4" stroke-width="1.4"/>
+<text x="1344" y="1182" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">ublk → OverlayBD</text>
+<text x="1344" y="1208" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="400">本地增量 ΔB：空</text>
+<path d="M420 964 H440 Q448 964 448 956 V860 Q448 852 440 852 H436" fill="none" stroke="#d36e49" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="436,852 448,846 448,858" fill="#d36e49"/>
+<path d="M436 870 H458 V1080 H610 V1152" fill="none" stroke="#d36e49" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="610,1152 604,1140 616,1140" fill="#d36e49"/>
+<path d="M792 852 H820 Q828 852 828 860 V1180 Q828 1188 820 1188 H808" fill="none" stroke="#d36e49" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="808,1188 820,1182 820,1194" fill="#d36e49"/>
+<circle cx="744" cy="1080" r="18" fill="#fff0e8" stroke="#d36e49" stroke-width="1.4"/>
+<text x="744" y="1087" fill="#d36e49" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">2</text>
+<text x="776" y="1087" fill="#d36e49" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">本地增量写</text>
+<path d="M278 758 V634" fill="none" stroke="#3f6f9f" stroke-width="2.5" stroke-linecap="round"/>
+<polygon points="278,628 272,640 284,640" fill="#3f6f9f"/>
+<path d="M1126 758 V634" fill="none" stroke="#3f6f9f" stroke-width="2.5" stroke-linecap="round"/>
+<polygon points="1126,628 1120,640 1132,640" fill="#3f6f9f"/>
+<rect x="184" y="1328" width="1392" height="164" rx="8" fill="#edf3f9" stroke="#9db5cd" stroke-width="1.6"/>
+<text x="208" y="1358" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="21" font-weight="700">3FS · 独立保存的镜像</text>
+<text x="1552" y="1358" fill="#5d83ad" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="500" text-anchor="end">各镜像独立 · 运行时选择</text>
+<rect x="216" y="1376" width="278" height="88" rx="6" fill="#ffffff" stroke="#9fb7cf" stroke-width="1.2"/>
+<path d="M241 1412 V1408 Q241 1401 249 1401 Q257 1401 257 1408 V1412" fill="none" stroke="#5d83ad" stroke-width="1.6"/>
+<rect x="238" y="1412" width="22" height="17" rx="3" fill="#ffffff" stroke="#5d83ad" stroke-width="1.4"/>
+<text x="276" y="1414" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">EROFS · Base B1</text>
+<text x="276" y="1444" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="400">系统依赖</text>
+<rect x="518" y="1376" width="298" height="88" rx="6" fill="#ffffff" stroke="#9fb7cf" stroke-width="1.2"/>
+<path d="M543 1412 V1408 Q543 1401 551 1401 Q559 1401 559 1408 V1412" fill="none" stroke="#5d83ad" stroke-width="1.6"/>
+<rect x="540" y="1412" width="22" height="17" rx="3" fill="#ffffff" stroke="#5d83ad" stroke-width="1.4"/>
+<text x="578" y="1414" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">EROFS · Toolkit T1</text>
+<text x="578" y="1444" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="400">tool.py v1</text>
+<rect x="944" y="1376" width="600" height="88" rx="6" fill="#ffffff" stroke="#9fb7cf" stroke-width="1.2"/>
+<path d="M969 1412 V1408 Q969 1401 977 1401 Q985 1401 985 1408 V1412" fill="none" stroke="#5d83ad" stroke-width="1.6"/>
+<rect x="966" y="1412" width="22" height="17" rx="3" fill="#ffffff" stroke="#5d83ad" stroke-width="1.4"/>
+<text x="1004" y="1414" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">OverlayBD · Workspace W1 基础块</text>
+<text x="1004" y="1444" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="400">main.py v1  ·  old.txt</text>
+</svg>

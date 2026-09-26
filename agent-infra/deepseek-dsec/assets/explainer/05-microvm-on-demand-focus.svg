@@ -1,0 +1,185 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1400" role="img" aria-labelledby="mm-title mm-desc">
+<title id="mm-title">microVM 镜像按需读取：只读页共享与可写块缓存</title>
+<desc id="mm-desc">同一工作节点的 microVM A 和 B 分别挂载只读 Base 与 Toolkit EROFS 设备。A 首次读取 Base 文件时，经 Guest EROFS 和 virtio-pmem DAX 触发冷访问，宿主仅从 3FS 取得所需镜像数据并让共享 backing page 就绪；B 再读同一内容时复用宿主页面，不再从 3FS 取。右侧单独显示可写 ext4 磁盘经 virtio-blk、ublk、OverlayBD，从 3FS 以 256 KiB 块按需读入节点本地二级缓存；运行写入本地增量。Guest 页缓存的 DAMON 和 balloon 回收只在底部给出下一篇入口。</desc>
+<rect x="0" y="0" width="1800" height="1400" rx="0" fill="#f6f7f9" stroke="#f6f7f9" stroke-width="0"/>
+<text x="56" y="56" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="34" font-weight="700" text-anchor="start">microVM：镜像如何按需读取、共享与写入？</text>
+<text x="56" y="91" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="450" text-anchor="start">同一工作节点上的 microVM A / B · 两类磁盘走不同路径</text>
+<path d="M 58 126 L 94 126" fill="none" stroke="#8291a3" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 5"/>
+<text x="103" y="132" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start">首次读取／缺页请求</text>
+<path d="M 357 126 L 393 126" fill="none" stroke="#3f6f9f" stroke-width="3" stroke-linecap="round"/>
+<text x="402" y="132" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start">所需数据返回／复用</text>
+<path d="M 674 126 L 710 126" fill="none" stroke="#d36e49" stroke-width="3" stroke-linecap="round"/>
+<text x="719" y="132" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start">写入节点本地</text>
+<rect x="56" y="160" width="1068" height="1142" rx="10" fill="#fff" stroke="#c7d2de" stroke-width="1.5"/>
+<rect x="1152" y="160" width="592" height="1142" rx="10" fill="#fff" stroke="#c7d2de" stroke-width="1.5"/>
+<text x="80" y="201" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="start">只读 Base / Toolkit · virtio-pmem / DAX</text>
+<text x="80" y="229" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="450" text-anchor="start">A 首读使宿主页面就绪；B 再读同一文件，直接复用</text>
+<text x="1176" y="201" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="start">可写 ext4 · OverlayBD</text>
+<text x="1176" y="229" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="450" text-anchor="start">基础块按需读；修改只写本地增量</text>
+<rect x="80" y="595" width="1020" height="372" rx="8" fill="#f9fbfd" stroke="#d2dde8" stroke-width="1.2"/>
+<rect x="1176" y="595" width="544" height="372" rx="8" fill="#f9fbfd" stroke="#d2dde8" stroke-width="1.2"/>
+<text x="104" y="628" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start">工作节点宿主</text>
+<text x="1200" y="628" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start">工作节点宿主</text>
+<path d="M 80 1010 L 1720 1010" fill="none" stroke="#a9b8c7" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="6 5"/>
+<rect x="743" y="995" width="314" height="28" rx="4" fill="#f6f7f9" stroke="none" stroke-width="0"/>
+<text x="900" y="1015" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="650" text-anchor="middle">下方：3FS 远端共享镜像</text>
+<rect x="80" y="250" width="485" height="315" rx="8" fill="#fff" stroke="#a9bfd4" stroke-width="1.4"/>
+<rect x="615" y="250" width="485" height="315" rx="8" fill="#fff" stroke="#a9bfd4" stroke-width="1.4"/>
+<rect x="104" y="265" width="221" height="30" rx="4" fill="#edf3f9" stroke="none" stroke-width="0"/>
+<text x="214.5" y="286" fill="#3f6f9f" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="650" text-anchor="middle">microVM A · 冷访问</text>
+<rect x="639" y="265" width="221" height="30" rx="4" fill="#edf3f9" stroke="none" stroke-width="0"/>
+<text x="749.5" y="286" fill="#3f6f9f" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="650" text-anchor="middle">microVM B · 热访问</text>
+<rect x="104" y="309" width="437" height="53" rx="6" fill="#fff" stroke="#a9bfd4" stroke-width="1.6"/>
+<text x="322.5" y="342.5" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">进程 read(/bin/python)</text>
+<rect x="104" y="391" width="437" height="70" rx="6" fill="#edf3f9" stroke="#6b95bb" stroke-width="1.6"/>
+<text x="322.5" y="422" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">Guest OverlayFS → EROFS</text>
+<text x="322.5" y="448" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="450" text-anchor="middle">Base B1、Toolkit T1 分别挂载</text>
+<rect x="104" y="492" width="437" height="53" rx="6" fill="#fff" stroke="#a9bfd4" stroke-width="1.6"/>
+<text x="322.5" y="525.5" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">virtio-pmem / DAX</text>
+<rect x="639" y="309" width="437" height="53" rx="6" fill="#fff" stroke="#a9bfd4" stroke-width="1.6"/>
+<text x="857.5" y="342.5" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">进程 read(/bin/python)</text>
+<rect x="639" y="391" width="437" height="70" rx="6" fill="#edf3f9" stroke="#6b95bb" stroke-width="1.6"/>
+<text x="857.5" y="422" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">Guest OverlayFS → EROFS</text>
+<text x="857.5" y="448" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="450" text-anchor="middle">Base B1、Toolkit T1 分别挂载</text>
+<rect x="639" y="492" width="437" height="53" rx="6" fill="#fff" stroke="#a9bfd4" stroke-width="1.6"/>
+<text x="857.5" y="525.5" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">virtio-pmem / DAX</text>
+<rect x="1176" y="250" width="544" height="315" rx="8" fill="#fff" stroke="#a9bfd4" stroke-width="1.4"/>
+<rect x="1200" y="265" width="142" height="30" rx="4" fill="#fff0e8" stroke="none" stroke-width="0"/>
+<text x="1271.0" y="286" fill="#b95735" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="650" text-anchor="middle">另一种磁盘</text>
+<rect x="1200" y="309" width="496" height="53" rx="6" fill="#fff" stroke="#a9bfd4" stroke-width="1.6"/>
+<text x="1448.0" y="342.5" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">进程 read / write(workspace)</text>
+<rect x="1200" y="391" width="496" height="70" rx="6" fill="#edf3f9" stroke="#6b95bb" stroke-width="1.6"/>
+<text x="1448.0" y="422" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">Guest ext4 + 页缓存</text>
+<text x="1448.0" y="448" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="450" text-anchor="middle">读后可能留下 Guest 缓存页</text>
+<rect x="1200" y="492" width="496" height="53" rx="6" fill="#fff" stroke="#a9bfd4" stroke-width="1.6"/>
+<text x="1448.0" y="525.5" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">virtio-blk</text>
+<rect x="285" y="693" width="610" height="142" rx="6" fill="#f1f6fb" stroke="#8aaccb" stroke-width="1.6"/>
+<text x="590.0" y="724" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">宿主 backing pages / 共享页缓存</text>
+<text x="590.0" y="750" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="450" text-anchor="middle">B1 被访问部分就绪；A、B 使用同一份</text>
+<rect x="335" y="790" width="39" height="19" rx="2" fill="#6b95bb" stroke="none" stroke-width="0"/>
+<rect x="385" y="790" width="39" height="19" rx="2" fill="#6b95bb" stroke="none" stroke-width="0"/>
+<rect x="435" y="790" width="39" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="485" y="790" width="39" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="535" y="790" width="39" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="585" y="790" width="39" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="635" y="790" width="39" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="685" y="790" width="39" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="735" y="790" width="39" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="785" y="790" width="39" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="104" y="877" width="252" height="30" rx="4" fill="#edf3f9" stroke="none" stroke-width="0"/>
+<text x="230.0" y="898" fill="#3f6f9f" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="650" text-anchor="middle">冷访问：缺页 → 3FS</text>
+<rect x="745" y="877" width="287" height="30" rx="4" fill="#edf3f9" stroke="none" stroke-width="0"/>
+<text x="888.5" y="898" fill="#3f6f9f" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="650" text-anchor="middle">热访问：共享页命中</text>
+<rect x="100" y="1047" width="450" height="147" rx="6" fill="#f3f5f7" stroke="#8799aa" stroke-width="1.6"/>
+<text x="325.0" y="1078" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">3FS · Base B1 EROFS</text>
+<text x="325.0" y="1104" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="450" text-anchor="middle">只读镜像；只取 A 访问的数据</text>
+<rect x="650" y="1047" width="450" height="147" rx="6" fill="#f3f5f7" stroke="#8799aa" stroke-width="1.6"/>
+<text x="875.0" y="1078" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">3FS · Toolkit T1 EROFS</text>
+<text x="875.0" y="1104" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="450" text-anchor="middle">独立镜像；本例未访问的数据仍留远端</text>
+<rect x="151" y="1152" width="34" height="19" rx="2" fill="#6b95bb" stroke="none" stroke-width="0"/>
+<rect x="195" y="1152" width="34" height="19" rx="2" fill="#6b95bb" stroke="none" stroke-width="0"/>
+<rect x="239" y="1152" width="34" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="283" y="1152" width="34" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="327" y="1152" width="34" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="371" y="1152" width="34" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="415" y="1152" width="34" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="459" y="1152" width="34" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="701" y="1152" width="34" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="745" y="1152" width="34" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="789" y="1152" width="34" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="833" y="1152" width="34" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="877" y="1152" width="34" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="921" y="1152" width="34" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="965" y="1152" width="34" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="1009" y="1152" width="34" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="1200" y="656" width="496" height="84" rx="6" fill="#edf3f9" stroke="#6b95bb" stroke-width="1.6"/>
+<text x="1448.0" y="687" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">ublk → OverlayBD</text>
+<text x="1448.0" y="713" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="450" text-anchor="middle">磁盘块请求；先查本地数据</text>
+<rect x="1200" y="786" width="230" height="121" rx="6" fill="#f1f6fb" stroke="#8aaccb" stroke-width="1.6"/>
+<text x="1315.0" y="817" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">本地二级缓存</text>
+<text x="1315.0" y="843" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="450" text-anchor="middle">缺失时以 256 KiB 块回填</text>
+<rect x="1466" y="786" width="230" height="121" rx="6" fill="#fff0e8" stroke="#d36e49" stroke-width="1.6"/>
+<text x="1581.0" y="817" fill="#a54e30" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">本地增量</text>
+<text x="1581.0" y="843" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="450" text-anchor="middle">仅当前沙箱的修改</text>
+<rect x="1200" y="1047" width="496" height="147" rx="6" fill="#f3f5f7" stroke="#8799aa" stroke-width="1.6"/>
+<text x="1448.0" y="1078" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">3FS · OverlayBD 基础块</text>
+<text x="1448.0" y="1104" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="450" text-anchor="middle">需要时才取；基础镜像保持只读</text>
+<rect x="1256" y="1152" width="37" height="19" rx="2" fill="#6b95bb" stroke="none" stroke-width="0"/>
+<rect x="1303" y="1152" width="37" height="19" rx="2" fill="#6b95bb" stroke="none" stroke-width="0"/>
+<rect x="1350" y="1152" width="37" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="1397" y="1152" width="37" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="1444" y="1152" width="37" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="1491" y="1152" width="37" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="1538" y="1152" width="37" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<rect x="1585" y="1152" width="37" height="19" rx="2" fill="#e1e6ec" stroke="none" stroke-width="0"/>
+<path d="M 345 362 L 345 380" fill="none" stroke="#8291a3" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 5"/>
+<polygon points="345,388 338,374 352,374" fill="#8291a3"/>
+<path d="M 460 391 L 460 373" fill="none" stroke="#3f6f9f" stroke-width="2.7" stroke-linecap="round"/>
+<polygon points="460,365 453,379 467,379" fill="#3f6f9f"/>
+<path d="M 345 461 L 345 480" fill="none" stroke="#8291a3" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 5"/>
+<polygon points="345,488 338,474 352,474" fill="#8291a3"/>
+<path d="M 460 492 L 460 472" fill="none" stroke="#3f6f9f" stroke-width="2.7" stroke-linecap="round"/>
+<polygon points="460,464 453,478 467,478" fill="#3f6f9f"/>
+<path d="M 835 362 L 835 380" fill="none" stroke="#8291a3" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 5"/>
+<polygon points="835,388 828,374 842,374" fill="#8291a3"/>
+<path d="M 750 391 L 750 373" fill="none" stroke="#3f6f9f" stroke-width="2.7" stroke-linecap="round"/>
+<polygon points="750,365 743,379 757,379" fill="#3f6f9f"/>
+<path d="M 835 461 L 835 480" fill="none" stroke="#8291a3" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 5"/>
+<polygon points="835,488 828,474 842,474" fill="#8291a3"/>
+<path d="M 750 492 L 750 472" fill="none" stroke="#3f6f9f" stroke-width="2.7" stroke-linecap="round"/>
+<polygon points="750,464 743,478 757,478" fill="#3f6f9f"/>
+<path d="M 1320 362 L 1320 380" fill="none" stroke="#8291a3" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 5"/>
+<polygon points="1320,388 1313,374 1327,374" fill="#8291a3"/>
+<path d="M 1600 391 L 1600 373" fill="none" stroke="#3f6f9f" stroke-width="2.7" stroke-linecap="round"/>
+<polygon points="1600,365 1593,379 1607,379" fill="#3f6f9f"/>
+<path d="M 1320 461 L 1320 480" fill="none" stroke="#8291a3" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 5"/>
+<polygon points="1320,488 1313,474 1327,474" fill="#8291a3"/>
+<path d="M 1600 492 L 1600 472" fill="none" stroke="#3f6f9f" stroke-width="2.7" stroke-linecap="round"/>
+<polygon points="1600,464 1593,478 1607,478" fill="#3f6f9f"/>
+<path d="M 345 545 L 345 682" fill="none" stroke="#8291a3" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 5"/>
+<polygon points="345,690 338,676 352,676" fill="#8291a3"/>
+<path d="M 460 693 L 460 556" fill="none" stroke="#3f6f9f" stroke-width="2.7" stroke-linecap="round"/>
+<polygon points="460,548 453,562 467,562" fill="#3f6f9f"/>
+<path d="M 835 545 L 835 682" fill="none" stroke="#8291a3" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 5"/>
+<polygon points="835,690 828,676 842,676" fill="#8291a3"/>
+<path d="M 750 693 L 750 556" fill="none" stroke="#3f6f9f" stroke-width="2.7" stroke-linecap="round"/>
+<polygon points="750,548 743,562 757,562" fill="#3f6f9f"/>
+<path d="M 345 835 L 345 1036" fill="none" stroke="#8291a3" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 5"/>
+<polygon points="345,1044 338,1030 352,1030" fill="#8291a3"/>
+<path d="M 460 1047 L 460 846" fill="none" stroke="#3f6f9f" stroke-width="2.7" stroke-linecap="round"/>
+<polygon points="460,838 453,852 467,852" fill="#3f6f9f"/>
+<path d="M 1320 545 L 1320 645" fill="none" stroke="#8291a3" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 5"/>
+<polygon points="1320,653 1313,639 1327,639" fill="#8291a3"/>
+<path d="M 1600 656 L 1600 556" fill="none" stroke="#3f6f9f" stroke-width="2.7" stroke-linecap="round"/>
+<polygon points="1600,548 1593,562 1607,562" fill="#3f6f9f"/>
+<path d="M 1320 740 L 1320 775" fill="none" stroke="#8291a3" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 5"/>
+<polygon points="1320,783 1313,769 1327,769" fill="#8291a3"/>
+<path d="M 1390 786 L 1390 751" fill="none" stroke="#3f6f9f" stroke-width="2.7" stroke-linecap="round"/>
+<polygon points="1390,743 1383,757 1397,757" fill="#3f6f9f"/>
+<path d="M 1300 907 L 1300 1036" fill="none" stroke="#8291a3" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 5"/>
+<polygon points="1300,1044 1293,1030 1307,1030" fill="#8291a3"/>
+<path d="M 1380 1047 L 1380 918" fill="none" stroke="#3f6f9f" stroke-width="2.7" stroke-linecap="round"/>
+<polygon points="1380,910 1373,924 1387,924" fill="#3f6f9f"/>
+<path d="M 1580 740 L 1580 775" fill="none" stroke="#d36e49" stroke-width="2.7" stroke-linecap="round"/>
+<polygon points="1580,783 1573,769 1587,769" fill="#d36e49"/>
+<circle cx="345" cy="613" r="17" fill="#fff" stroke="#8291a3" stroke-width="2"/>
+<text x="345" y="618" fill="#8291a3" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="750" text-anchor="middle">1</text>
+<text x="370" y="619" fill="#8291a3" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="650" text-anchor="start">A 冷读</text>
+<circle cx="345" cy="966" r="17" fill="#fff" stroke="#8291a3" stroke-width="2"/>
+<text x="345" y="971" fill="#8291a3" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="750" text-anchor="middle">2</text>
+<text x="320" y="972" fill="#8291a3" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="650" text-anchor="end">3FS 取数</text>
+<circle cx="460" cy="966" r="17" fill="#fff" stroke="#3f6f9f" stroke-width="2"/>
+<text x="460" y="971" fill="#3f6f9f" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="750" text-anchor="middle">3</text>
+<text x="485" y="972" fill="#3f6f9f" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="650" text-anchor="start">回填共享页</text>
+<circle cx="835" cy="613" r="17" fill="#fff" stroke="#8291a3" stroke-width="2"/>
+<text x="835" y="618" fill="#8291a3" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="750" text-anchor="middle">4</text>
+<text x="860" y="619" fill="#8291a3" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="650" text-anchor="start">B 热读</text>
+<circle cx="750" cy="643" r="17" fill="#fff" stroke="#3f6f9f" stroke-width="2"/>
+<text x="750" y="648" fill="#3f6f9f" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16" font-weight="750" text-anchor="middle">5</text>
+<text x="725" y="649" fill="#3f6f9f" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="650" text-anchor="end">缓存返回</text>
+<rect x="80" y="1223" width="1020" height="56" rx="6" fill="#f2f6fa" stroke="#d2dde8" stroke-width="1"/>
+<text x="100" y="1258" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="550" text-anchor="start">未读的 B1／T1 数据仍在 3FS；共享的是已就绪的宿主页面。</text>
+<rect x="1176" y="1223" width="544" height="56" rx="6" fill="#f2f6fa" stroke="#a9bfd4" stroke-width="1" stroke-dasharray="5 4"/>
+<text x="1196" y="1258" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="600" text-anchor="start">Guest 冷缓存页 → DAMON + Balloon：第六篇</text>
+<text x="56" y="1352" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15" font-weight="450" text-anchor="start">图示依据：DSec 图 9、§5.1–5.3（PDF 第 14–17 页）。DAX 的具体远端读取粒度未在论文中展开。</text>
+</svg>

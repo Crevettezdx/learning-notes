@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 790" role="img" aria-labelledby="t d">
+  <title id="t">EROFS 的制作、挂载与读取</title>
+  <desc id="d">先将一棵固定目录制成含目录索引与可压缩数据块的 EROFS 镜像。图中数据块 A、B、C、D 独立排列；一次示例读取只需要 A，内核 EROFS 驱动定位并取得 A，必要时解压，其余块可暂不读取。镜像始终只读；写入可以由 OverlayFS 上层的 ext4 承接。</desc>
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0L10 4L0 8Z" fill="#587b9e"/></marker>
+  </defs>
+  <rect width="1400" height="790" fill="#f7f8fa"/>
+  <text x="48" y="58" fill="#263747" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="31" font-weight="700">EROFS：把固定文件树制成可直接挂载的只读镜像</text>
+  <text x="48" y="94" fill="#617488" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">EROFS 规定镜像内部如何组织目录、文件与数据块；存储系统负责提供镜像字节</text>
+
+  <rect x="48" y="124" width="1304" height="260" rx="8" fill="#fff" stroke="#c5d1dc" stroke-width="2"/>
+  <text x="72" y="163" fill="#263747" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="22" font-weight="700">① 制作镜像</text>
+  <rect x="79" y="189" width="254" height="154" rx="6" fill="#f9fbfd" stroke="#aabccd" stroke-width="1.5"/>
+  <text x="102" y="222" fill="#263747" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">普通目录</text>
+  <text x="104" y="264" fill="#52697e" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18">/bin/python</text>
+  <text x="104" y="300" fill="#52697e" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18">/lib/libc.so</text>
+  <path d="M333 267H398 M601 267H666" fill="none" stroke="#587b9e" stroke-width="2.7" marker-end="url(#a)"/>
+  <rect x="398" y="217" width="203" height="100" rx="6" fill="#eaf2fa" stroke="#7c9fbe" stroke-width="1.6"/>
+  <text x="499" y="257" text-anchor="middle" fill="#2a557a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="21" font-weight="700">mkfs.erofs</text>
+  <text x="499" y="289" text-anchor="middle" fill="#617488" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">制作工具</text>
+  <rect x="666" y="182" width="656" height="169" rx="6" fill="#edf4fb" stroke="#7c9fbe" stroke-width="1.7"/>
+  <text x="690" y="216" fill="#2a557a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">EROFS 镜像</text>
+  <rect x="690" y="235" width="294" height="89" rx="5" fill="#fff" stroke="#a6bbcf" stroke-width="1.4"/>
+  <text x="837" y="270" text-anchor="middle" fill="#263747" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18">目录 / inode / 块索引</text>
+  <text x="837" y="298" text-anchor="middle" fill="#617488" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">/bin/python → 块 A</text>
+  <rect x="1008" y="235" width="288" height="89" rx="5" fill="#fff" stroke="#a6bbcf" stroke-width="1.4"/>
+  <text x="1152" y="262" text-anchor="middle" fill="#263747" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">数据块（可压缩）</text>
+  <rect x="1030" y="278" width="49" height="31" rx="3" fill="#cfe4f6" stroke="#5a8bb4" stroke-width="1.5"/>
+  <rect x="1095" y="278" width="49" height="31" rx="3" fill="#f0f3f6" stroke="#aebdca" stroke-width="1.2"/>
+  <rect x="1160" y="278" width="49" height="31" rx="3" fill="#f0f3f6" stroke="#aebdca" stroke-width="1.2"/>
+  <rect x="1225" y="278" width="49" height="31" rx="3" fill="#f0f3f6" stroke="#aebdca" stroke-width="1.2"/>
+  <text x="1054.5" y="300" text-anchor="middle" fill="#28577e" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">A</text>
+  <text x="1119.5" y="300" text-anchor="middle" fill="#718293" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">B</text>
+  <text x="1184.5" y="300" text-anchor="middle" fill="#718293" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">C</text>
+  <text x="1249.5" y="300" text-anchor="middle" fill="#718293" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">D</text>
+
+  <rect x="48" y="416" width="1304" height="238" rx="8" fill="#fff" stroke="#c5d1dc" stroke-width="2"/>
+  <text x="72" y="455" fill="#263747" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="22" font-weight="700">② 挂载后按路径读取</text>
+  <rect x="79" y="490" width="260" height="104" rx="6" fill="#f9fbfd" stroke="#aabccd" stroke-width="1.5"/>
+  <text x="102" y="528" fill="#263747" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">应用读文件</text>
+  <text x="102" y="565" fill="#52697e" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18">/bin/python</text>
+  <rect x="407" y="490" width="287" height="104" rx="6" fill="#eaf2fa" stroke="#7c9fbe" stroke-width="1.6"/>
+  <text x="430" y="528" fill="#2a557a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">Linux EROFS 驱动</text>
+  <text x="430" y="565" fill="#52697e" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">按元数据定位块 A</text>
+  <rect x="762" y="490" width="250" height="104" rx="6" fill="#f9fbfd" stroke="#aabccd" stroke-width="1.5"/>
+  <text x="785" y="522" fill="#263747" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">底层存储提供块 A</text>
+  <text x="785" y="550" fill="#52697e" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">本地盘或远端后端</text>
+  <text x="785" y="576" fill="#7a8998" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="15">B / C / D 可暂不读取</text>
+  <rect x="1080" y="490" width="241" height="104" rx="6" fill="#eaf2fa" stroke="#7c9fbe" stroke-width="1.6"/>
+  <text x="1102" y="528" fill="#2a557a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">EROFS 返回内容</text>
+  <text x="1102" y="565" fill="#52697e" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">若 A 压缩则解压 A</text>
+  <path d="M339 542H407 M694 542H762 M1012 542H1080" fill="none" stroke="#587b9e" stroke-width="2.7" marker-end="url(#a)"/>
+  <text x="72" y="630" fill="#617488" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">A 仅为一次读取的示例；实际文件可能跨多个块，预读也可能取相邻块。</text>
+
+  <rect x="48" y="687" width="1304" height="73" rx="8" fill="#fff" stroke="#c5d1dc" stroke-width="2"/>
+  <text x="72" y="732" fill="#263747" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">写入：</text>
+  <text x="139" y="732" fill="#52697e" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18">EROFS 镜像保持只读</text>
+  <path d="M425 725H516" fill="none" stroke="#587b9e" stroke-width="2.5" marker-end="url(#a)"/>
+  <text x="536" y="732" fill="#2a557a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18">可用 OverlayFS 叠加 Upper</text>
+  <path d="M931 725H1021" fill="none" stroke="#587b9e" stroke-width="2.5" marker-end="url(#a)"/>
+  <text x="1041" y="732" fill="#2a557a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18">Upper 可由 ext4 承载</text>
+</svg>

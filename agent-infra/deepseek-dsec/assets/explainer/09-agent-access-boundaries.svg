@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 930" role="img" aria-labelledby="t d">
+  <title id="t">运行 Agent 的访问边界约束非预期信息路径</title>
+  <desc id="d">同一个沙箱内 Agent 进程在三条路径上重复显示。访问 Chronus 日志和 Unix socket 的未授权尝试在 AppArmor 处停止，即使进程拥有沙箱内 root 权限也受约束。网络请求经过每沙箱 eBPF 策略，示例允许 PyPI、拒绝 NPM。内核故障与无界命令输出仍是剩余稳定性风险，访问控制不能全面解决，需要监测和持续加固。</desc>
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0,0 10,4 0,8" fill="#587da3"/></marker>
+    <marker id="muted" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0,0 10,4 0,8" fill="#8799aa"/></marker>
+  </defs>
+  <rect width="1600" height="930" fill="#f6f7f9"/>
+  <text x="56" y="60" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="33" font-weight="700">运行 Agent 的访问边界约束非预期信息路径</text>
+  <text x="56" y="98" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19">三行是同一个运行 Agent 的三类行为：平台内部访问、外部网络访问、环境稳定性风险</text>
+
+  <rect x="56" y="138" width="1488" height="220" rx="8" fill="#fff" stroke="#c7d2de" stroke-width="2"/>
+  <text x="80" y="180" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="22" font-weight="700">① 平台内部文件与通信通道</text>
+  <path d="M 382 256 H 548" fill="none" stroke="#b96659" stroke-width="2.5" stroke-dasharray="8 5"/>
+  <path d="M 548 240 V 272" fill="none" stroke="#b96659" stroke-width="4"/>
+  <rect x="88" y="214" width="294" height="84" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="580" y="214" width="312" height="84" rx="6" fill="#fff2ef" stroke="#bf8679" stroke-width="1.8"/>
+  <rect x="1054" y="214" width="434" height="84" rx="6" fill="#f9fbfd" stroke="#aebdcb" stroke-width="1.5"/>
+  <text x="235" y="249" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">沙箱内 Agent 进程</text>
+  <text x="235" y="276" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">可能拥有 root 权限</text>
+  <text x="736" y="249" text-anchor="middle" fill="#834d43" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">AppArmor · 拒绝越权访问</text>
+  <text x="736" y="276" text-anchor="middle" fill="#834d43" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">约束文件读写与 Unix socket</text>
+  <text x="1271" y="249" text-anchor="middle" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">Chronus 日志 / socket</text>
+  <text x="1271" y="276" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">平台管理信息与内部通信</text>
+  <text x="80" y="333" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">示例：探查日志中的答案、直接向 socket 伪造请求；访问在 AppArmor 规则处受限</text>
+
+  <rect x="56" y="384" width="1488" height="246" rx="8" fill="#fff" stroke="#c7d2de" stroke-width="2"/>
+  <text x="80" y="426" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="22" font-weight="700">② 沙箱到外部网络</text>
+  <path d="M 382 510 H 580 M 892 480 H 1054" fill="none" stroke="#587da3" stroke-width="2.7" marker-end="url(#arr)"/>
+  <path d="M 892 551 H 1010" fill="none" stroke="#b96659" stroke-width="2.4" stroke-dasharray="8 5"/>
+  <path d="M 1010 535 V 567" fill="none" stroke="#b96659" stroke-width="4"/>
+  <rect x="88" y="468" width="294" height="84" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="580" y="468" width="312" height="100" rx="6" fill="#eaf2fa" stroke="#6b95bb" stroke-width="1.8"/>
+  <rect x="1054" y="448" width="434" height="66" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="1054" y="528" width="434" height="66" rx="6" fill="#f9fbfd" stroke="#aebdcb" stroke-width="1.5"/>
+  <text x="235" y="505" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">同一 Agent 进程</text>
+  <text x="235" y="532" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">请求网络资源</text>
+  <text x="736" y="504" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">每沙箱 eBPF 规则</text>
+  <text x="736" y="534" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">按 IP、端口、协议过滤</text>
+  <text x="1271" y="490" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">PyPI · 允许</text>
+  <text x="1271" y="570" text-anchor="middle" fill="#834d43" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">NPM · 拒绝</text>
+  <text x="80" y="609" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">PyPI / NPM 是论文中的任务策略示例；训练框架指定权限，DSec 可随任务阶段动态更新</text>
+
+  <rect x="56" y="656" width="1488" height="218" rx="8" fill="#fff" stroke="#c7d2de" stroke-width="2"/>
+  <text x="80" y="698" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="22" font-weight="700">③ 仍需单独处理的稳定性风险</text>
+  <path d="M 382 774 H 580 M 892 774 H 1054" fill="none" stroke="#8799aa" stroke-width="2.3" stroke-dasharray="7 5" marker-end="url(#muted)"/>
+  <rect x="88" y="732" width="294" height="84" rx="6" fill="#edf3f9" stroke="#89a9c7" stroke-width="1.5"/>
+  <rect x="580" y="732" width="312" height="84" rx="6" fill="#f9fbfd" stroke="#aebdcb" stroke-width="1.5"/>
+  <rect x="1054" y="732" width="434" height="84" rx="6" fill="#f9fbfd" stroke="#aebdcb" stroke-width="1.5"/>
+  <text x="235" y="769" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">同一 Agent 进程</text>
+  <text x="235" y="796" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">任意命令可能出错</text>
+  <text x="736" y="768" text-anchor="middle" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">文件与网络规则不兜底</text>
+  <text x="736" y="796" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">需要监测与持续加固</text>
+  <text x="1271" y="768" text-anchor="middle" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">内核故障 / 输出膨胀</text>
+  <text x="1271" y="796" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">如读 /proc、无限 stdout</text>
+  <text x="80" y="850" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">访问控制主要限制非预期信息渠道；它不能一般性阻止破坏性命令或内核缺陷</text>
+</svg>

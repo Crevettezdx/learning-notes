@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 900" role="img" aria-labelledby="smt-title smt-desc">
+  <title id="smt-title">SCHED_IDLE 无法阻止 SMT 兄弟线程同核争用</title>
+  <desc id="smt-desc">左右两侧都是一个物理 CPU 核，内部有两个 SMT 逻辑 CPU，二者共享核内执行单元和缓存。左侧仅将 BE 任务设为 SCHED_IDLE：LS 在逻辑 CPU 0、BE 在逻辑 CPU 1，仍同时争用共享硬件。右侧增加 Linux core scheduling：LS 运行时，兄弟逻辑 CPU 可空闲或运行同类 LS，但不再运行无关 BE；LS 等待时，BE 仍可使用空闲核。</desc>
+  <defs>
+    <marker id="smt-arrow-blue" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0,0 10,4 0,8" fill="#4b79a8"/></marker>
+    <marker id="smt-arrow-red" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0,0 10,4 0,8" fill="#c86555"/></marker>
+  </defs>
+  <rect width="1700" height="900" fill="#f6f7f9"/>
+  <text x="56" y="62" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="34" font-weight="700">SCHED_IDLE 无法阻止 SMT 兄弟线程同核争用</text>
+  <text x="56" y="101" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19">同一个物理核可以呈现两个逻辑 CPU；调度位置分开，核内硬件仍共享</text>
+
+  <rect x="56" y="156" width="770" height="654" rx="10" fill="#fff" stroke="#c7d2de" stroke-width="1.8"/>
+  <rect x="874" y="156" width="770" height="654" rx="10" fill="#fff" stroke="#c7d2de" stroke-width="1.8"/>
+  <text x="80" y="206" fill="#9f493e" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="25" font-weight="700">仅 SCHED_IDLE · 两个逻辑 CPU 各自调度</text>
+  <text x="898" y="206" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="25" font-weight="700">再加 core scheduling · 协调同一物理核</text>
+  <text x="80" y="246" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18">BE 优先级低，仍可在 LS 的兄弟线程运行</text>
+  <text x="898" y="246" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18">LS 正在运行时，阻止无关 BE 同核运行</text>
+
+  <!-- Physical cores and shared hardware. -->
+  <rect x="100" y="284" width="682" height="408" rx="10" fill="#f9fbfd" stroke="#9fb2c5" stroke-width="2"/>
+  <rect x="918" y="284" width="682" height="408" rx="10" fill="#f9fbfd" stroke="#9fb2c5" stroke-width="2"/>
+  <text x="128" y="324" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="22" font-weight="700">物理核 P0</text>
+  <text x="946" y="324" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="22" font-weight="700">物理核 P0</text>
+
+  <!-- Arrows are behind all nodes. -->
+  <path d="M 286 524 V 560" fill="none" stroke="#4b79a8" stroke-width="3" marker-end="url(#smt-arrow-blue)"/>
+  <path d="M 598 524 V 560" fill="none" stroke="#c86555" stroke-width="3" marker-end="url(#smt-arrow-red)"/>
+  <path d="M 1104 524 V 560" fill="none" stroke="#4b79a8" stroke-width="3" marker-end="url(#smt-arrow-blue)"/>
+
+  <!-- Left: two independently scheduled SMT contexts contend. -->
+  <rect x="132" y="352" width="300" height="172" rx="6" fill="#eaf2fa" stroke="#6b95bb" stroke-width="1.8"/>
+  <rect x="448" y="352" width="300" height="172" rx="6" fill="#fff0ec" stroke="#c86555" stroke-width="1.8"/>
+  <text x="282" y="390" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">SMT 逻辑 CPU 0</text>
+  <text x="598" y="390" fill="#9f493e" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">SMT 逻辑 CPU 1</text>
+  <rect x="190" y="420" width="184" height="72" rx="6" fill="#b7d0e7" stroke="#6b95bb" stroke-width="1.5"/>
+  <rect x="506" y="420" width="184" height="72" rx="6" fill="#e7b4aa" stroke="#c86555" stroke-width="1.5"/>
+  <text x="282" y="466" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle">LS 正在运行</text>
+  <text x="598" y="466" fill="#733b34" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle">BE 仍在运行</text>
+  <rect x="132" y="572" width="616" height="88" rx="6" fill="#fff6f3" stroke="#d28f82" stroke-width="1.8"/>
+  <text x="440" y="612" fill="#9f493e" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="21" font-weight="700" text-anchor="middle">共享执行单元 / 核内缓存</text>
+  <text x="440" y="640" fill="#9f493e" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" text-anchor="middle">LS 与 BE 同时争用</text>
+
+  <!-- Right: core scheduling holds incompatible BE off the sibling while LS runs. -->
+  <rect x="950" y="352" width="300" height="172" rx="6" fill="#eaf2fa" stroke="#6b95bb" stroke-width="1.8"/>
+  <rect x="1266" y="352" width="300" height="172" rx="6" fill="#fff" stroke="#b8c7d5" stroke-width="1.8" stroke-dasharray="7 5"/>
+  <text x="1100" y="390" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">SMT 逻辑 CPU 0</text>
+  <text x="1416" y="390" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">SMT 逻辑 CPU 1</text>
+  <rect x="1008" y="420" width="184" height="72" rx="6" fill="#b7d0e7" stroke="#6b95bb" stroke-width="1.5"/>
+  <rect x="1324" y="420" width="184" height="72" rx="6" fill="#f3f5f7" stroke="#b8c7d5" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="1100" y="466" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle">LS 正在运行</text>
+  <text x="1416" y="466" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="21" font-weight="700" text-anchor="middle">空闲 / 同类 LS</text>
+  <rect x="950" y="572" width="616" height="88" rx="6" fill="#eaf2fa" stroke="#8aaccb" stroke-width="1.8"/>
+  <text x="1258" y="612" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="21" font-weight="700" text-anchor="middle">共享执行单元 / 核内缓存</text>
+  <text x="1258" y="640" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" text-anchor="middle">此时不与 BE 同核争用</text>
+
+  <rect x="100" y="718" width="682" height="64" rx="6" fill="#fff4f1" stroke="#d28f82" stroke-width="1.5"/>
+  <rect x="918" y="718" width="682" height="64" rx="6" fill="#edf3f9" stroke="#8aaccb" stroke-width="1.5"/>
+  <text x="441" y="758" fill="#9f493e" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700" text-anchor="middle">调度优先级无法约束另一个逻辑 CPU</text>
+  <text x="1259" y="758" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700" text-anchor="middle">LS 等待时，BE 仍可利用空闲周期</text>
+  <path d="M 56 844 H 1644" fill="none" stroke="#c7d2de" stroke-width="1.2"/>
+  <text x="56" y="875" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">LS：延迟敏感任务　　BE：尽力而为任务　　SMT：一个物理核向系统呈现多个可调度的逻辑 CPU</text>
+</svg>

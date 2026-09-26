@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 790" role="img" aria-labelledby="t d">
+  <title id="t">Agent 构造的环境经过清理和检查后复用于训练</title>
+  <desc id="d">大规模 Agent RL 任务需要不同仓库、依赖、服务和验证脚本。构造 Agent 遵循规则，在 DSec 沙箱中交互式准备环境；打包前保留环境所需的可写改动并清理答案等构造残留，pack_diff 保存增量磁盘快照；内部平台检查并标准化导出；使用不同账号的运行 Agent 从快照创建新沙箱。构造和消费发生在同一套 DSec 基础设施上。</desc>
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0,0 10,4 0,8" fill="#587da3"/></marker>
+  </defs>
+  <rect width="1600" height="790" fill="#f6f7f9"/>
+  <text x="56" y="60" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="33" font-weight="700">Agent 构造的环境经过清理和检查后复用于训练</text>
+  <text x="56" y="98" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19">一套 DSec 基础设施贯穿构造与消费；环境文件可以复用，构造者与运行者的身份分开</text>
+
+  <rect x="56" y="132" width="1488" height="138" rx="8" fill="#fff" stroke="#c7d2de" stroke-width="2"/>
+  <text x="80" y="172" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="21" font-weight="700">背景 · 大量任务需要各不相同的真实执行环境</text>
+  <rect x="86" y="196" width="250" height="48" rx="6" fill="#edf3f9" stroke="#9ab5cf"/>
+  <rect x="380" y="196" width="250" height="48" rx="6" fill="#edf3f9" stroke="#9ab5cf"/>
+  <rect x="674" y="196" width="250" height="48" rx="6" fill="#edf3f9" stroke="#9ab5cf"/>
+  <rect x="968" y="196" width="250" height="48" rx="6" fill="#edf3f9" stroke="#9ab5cf"/>
+  <rect x="1262" y="196" width="250" height="48" rx="6" fill="#edf3f9" stroke="#9ab5cf"/>
+  <text x="211" y="226" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">任务仓库</text>
+  <text x="505" y="226" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">软件依赖</text>
+  <text x="799" y="226" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">运行服务</text>
+  <text x="1093" y="226" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">验证脚本</text>
+  <text x="1387" y="226" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">Agent 工具</text>
+
+  <text x="80" y="322" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="19" font-weight="700">环境从构造到消费</text>
+  <path d="M 318 463 H 350 M 610 463 H 642 M 902 463 H 934 M 1210 463 H 1242" fill="none" stroke="#587da3" stroke-width="2.8" marker-end="url(#arr)"/>
+  <rect x="56" y="350" width="262" height="226" rx="8" fill="#fff" stroke="#aebdcb" stroke-width="1.8"/>
+  <rect x="350" y="350" width="260" height="226" rx="8" fill="#fff" stroke="#aebdcb" stroke-width="1.8"/>
+  <rect x="642" y="350" width="260" height="226" rx="8" fill="#eaf2fa" stroke="#6b95bb" stroke-width="2"/>
+  <rect x="934" y="350" width="276" height="226" rx="8" fill="#fff" stroke="#aebdcb" stroke-width="1.8"/>
+  <rect x="1242" y="350" width="302" height="226" rx="8" fill="#fff" stroke="#aebdcb" stroke-width="1.8"/>
+  <text x="78" y="391" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">① 构造者</text>
+  <text x="372" y="391" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">② 交互式准备</text>
+  <text x="664" y="391" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">③ 选择性清理并打包</text>
+  <text x="956" y="391" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">④ 质量门</text>
+  <text x="1264" y="391" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">⑤ 消费环境</text>
+  <text x="187" y="449" text-anchor="middle" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="22" font-weight="700">构造 Agent</text>
+  <text x="187" y="481" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">遵循内部规则</text>
+  <text x="187" y="538" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">构造者账号</text>
+  <text x="480" y="449" text-anchor="middle" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="22" font-weight="700">DSec 构造沙箱</text>
+  <text x="480" y="481" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">安装 · 调试 · 验证</text>
+  <text x="480" y="537" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">所需改动 + 调试残留</text>
+  <text x="772" y="438" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="18" font-weight="700">保留环境所需改动</text>
+  <text x="772" y="466" text-anchor="middle" fill="#834d43" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">清理答案等残留</text>
+  <path d="M 772 478 V 496" fill="none" stroke="#587da3" stroke-width="2.4" marker-end="url(#arr)"/>
+  <text x="772" y="527" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="21" font-weight="700">pack_diff</text>
+  <text x="772" y="552" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">增量磁盘快照</text>
+  <text x="1072" y="449" text-anchor="middle" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="22" font-weight="700">内部检查平台</text>
+  <text x="1072" y="481" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">质量检查</text>
+  <text x="1072" y="537" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="16">标准化导出</text>
+  <text x="1393" y="449" text-anchor="middle" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="22" font-weight="700">训练 / 评估沙箱</text>
+  <text x="1393" y="481" text-anchor="middle" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">从快照恢复为新沙箱</text>
+  <text x="1393" y="538" text-anchor="middle" fill="#234a71" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17" font-weight="700">运行 Agent 账号</text>
+
+  <rect x="56" y="620" width="1488" height="104" rx="8" fill="#fff" stroke="#c7d2de" stroke-width="1.8"/>
+  <text x="80" y="657" fill="#263445" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="20" font-weight="700">同一套 DSec 沙箱基础设施</text>
+  <text x="80" y="690" fill="#60738a" font-family="PingFang SC, Noto Sans CJK SC, Arial, sans-serif" font-size="17">构造阶段直接产出可复用环境；身份隔离与打包前清理防止参考答案等残留进入训练阶段</text>
+</svg>
