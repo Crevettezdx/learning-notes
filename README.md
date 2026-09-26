@@ -15,6 +15,10 @@
 
 - [DeepSeek-V4.1-Flash 架构学习笔记](./model-architecture/deepseek-v4.1-flash/README.md)：围绕长任务 Agent，梳理 CED、CSA2、分层稀疏索引、SWA Bounded Replay、后训练与系统启示。
 
+## 学习方法
+
+- [论文交互学习 Skill](./skills/paper-learning/SKILL.md)：先由助手通读、讲解论文，再逐个逻辑单元讨论，确认后沉淀以图为主的 Markdown 笔记。
+
 ## 目录约定
 
 ```text
@@ -26,12 +30,16 @@ learning-notes/
 ├── agent-infra/
 │   ├── sandbox/                      # Agent 沙箱专题
 │   └── deepseek-dsec/                # DSec 论文学习笔记
-└── model-architecture/
-    └── deepseek-v4.1-flash/          # 模型架构专题
-        ├── README.md                 # 主题目录与阅读路径
-        ├── 00-论文总览.md
-        ├── …                         # 独立学习单元
-        └── assets/                   # 正文引用图片
+├── model-architecture/
+│   └── deepseek-v4.1-flash/          # 模型架构专题
+│       ├── README.md                 # 主题目录与阅读路径
+│       ├── 00-论文总览.md
+│       ├── …                         # 独立学习单元
+│       └── assets/                   # 正文引用图片
+└── skills/
+    └── paper-learning/              # 可复用的论文学习 Skill
+        ├── SKILL.md
+        └── agents/openai.yaml
 ```
 
 - 每个主题使用独立目录，主题 README 作为入口。

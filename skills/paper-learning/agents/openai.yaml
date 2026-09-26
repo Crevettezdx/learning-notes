@@ -1,0 +1,4 @@
+interface:
+  display_name: "论文交互学习与图文笔记"
+  short_description: "通读论文原文、逐单元交互讲解，并在确认后沉淀以图为主的学习笔记"
+  default_prompt: "Use $paper-learning 陪我学习这篇论文：先通读并规划逻辑单元，再逐单元讲解、讨论，确认后沉淀图文笔记。"
