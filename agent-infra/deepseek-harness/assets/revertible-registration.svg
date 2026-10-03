@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="520" viewBox="0 0 1320 520" role="img" aria-labelledby="revertible-title revertible-desc">
+  <title id="revertible-title">一次注册同时建立能力并留下撤销动作</title>
+  <desc id="revertible-desc">tool-todo 调用工具服务的注册方法 tools.register。该方法将 todo_write 登记到 tools，并经 ctx.effect 把对应的撤销函数交给 Cordis 保存。tool-todo 停用时，Cordis 调用该函数，移除该次注册。函数的提供与执行发生在不同阶段。</desc>
+  <rect width="1320" height="520" fill="#f7f9fb"/>
+  <text x="42" y="51" fill="#1c3344" font-size="28" font-weight="700" font-family="PingFang SC,Arial,sans-serif">一次注册，同时交代“怎样撤销”</text>
+
+  <rect x="40" y="80" width="744" height="394" rx="14" fill="#fff" stroke="#d8e2eb" stroke-width="2"/>
+  <rect x="804" y="80" width="476" height="394" rx="14" fill="#fff" stroke="#d8e2eb" stroke-width="2"/>
+  <text x="65" y="119" fill="#2f689f" font-size="22" font-weight="700" font-family="PingFang SC,Arial,sans-serif">加载时：建立与记录</text>
+  <text x="829" y="119" fill="#a85628" font-size="22" font-weight="700" font-family="PingFang SC,Arial,sans-serif">停用时：执行清理</text>
+
+  <path d="M350 205 H476" fill="none" stroke="#3973ad" stroke-width="3"/>
+  <polygon points="488,205 473,197 473,213" fill="#3973ad"/>
+  <text x="420" y="185" text-anchor="middle" fill="#2f689f" font-size="17" font-family="PingFang SC,Arial,sans-serif">① 立即登记</text>
+
+  <path d="M210 257 V352 Q210 360 218 360 H476" fill="none" stroke="#b45e27" stroke-width="3"/>
+  <polygon points="488,360 473,352 473,368" fill="#b45e27"/>
+  <text x="347" y="340" text-anchor="middle" fill="#aa5725" font-size="17" font-family="PingFang SC,Arial,sans-serif">② 交出撤销函数</text>
+
+  <path d="M744 360 H844" fill="none" stroke="#b45e27" stroke-width="3"/>
+  <polygon points="856,360 841,352 841,368" fill="#b45e27"/>
+  <text x="797" y="338" text-anchor="middle" fill="#aa5725" font-size="16" font-family="PingFang SC,Arial,sans-serif">保存到停用</text>
+
+  <path d="M1042 304 V267" fill="none" stroke="#b45e27" stroke-width="3"/>
+  <polygon points="1042,255 1034,270 1050,270" fill="#b45e27"/>
+  <text x="1064" y="286" fill="#aa5725" font-size="16" font-family="PingFang SC,Arial,sans-serif">④ 移除注册</text>
+
+  <rect x="70" y="152" width="280" height="105" rx="10" fill="#eaf2fb" stroke="#94b8db" stroke-width="2"/>
+  <text x="210" y="191" text-anchor="middle" fill="#1c3344" font-size="22" font-weight="700" font-family="PingFang SC,Arial,sans-serif">工具服务的注册方法</text>
+  <text x="210" y="228" text-anchor="middle" fill="#3c607c" font-size="18" font-family="PingFang SC,Arial,sans-serif">由 tool-todo 调用</text>
+
+  <rect x="488" y="152" width="256" height="105" rx="10" fill="#eaf2fb" stroke="#94b8db" stroke-width="2"/>
+  <text x="616" y="191" text-anchor="middle" fill="#1c3344" font-size="22" font-weight="700" font-family="PingFang SC,Arial,sans-serif">tools 注册表</text>
+  <text x="616" y="228" text-anchor="middle" fill="#3c607c" font-size="20" font-family="PingFang SC,Arial,sans-serif">＋ todo_write</text>
+
+  <rect x="488" y="304" width="256" height="115" rx="10" fill="#fff1e7" stroke="#dbad88" stroke-width="2"/>
+  <text x="616" y="339" text-anchor="middle" fill="#1c3344" font-size="22" font-weight="700" font-family="PingFang SC,Arial,sans-serif">Cordis 保存</text>
+  <text x="616" y="371" text-anchor="middle" fill="#895630" font-size="18" font-family="PingFang SC,Arial,sans-serif">撤销 todo_write 的函数</text>
+  <text x="616" y="401" text-anchor="middle" fill="#895630" font-size="16" font-family="PingFang SC,Arial,sans-serif">归属 tool-todo；此时未执行</text>
+
+  <rect x="856" y="304" width="372" height="115" rx="10" fill="#fff1e7" stroke="#dbad88" stroke-width="2"/>
+  <text x="1042" y="341" text-anchor="middle" fill="#1c3344" font-size="22" font-weight="700" font-family="PingFang SC,Arial,sans-serif">③ Cordis 调用所存函数</text>
+  <text x="1042" y="385" text-anchor="middle" fill="#895630" font-size="18" font-family="PingFang SC,Arial,sans-serif">触发条件：tool-todo 停用</text>
+
+  <rect x="856" y="152" width="372" height="103" rx="10" fill="#f2f5f7" stroke="#acbdc9" stroke-width="2"/>
+  <text x="1042" y="190" text-anchor="middle" fill="#1c3344" font-size="22" font-weight="700" font-family="PingFang SC,Arial,sans-serif">tools 注册表</text>
+  <text x="1042" y="227" text-anchor="middle" fill="#526c7d" font-size="19" font-family="PingFang SC,Arial,sans-serif">－ 本次 todo_write 注册</text>
+
+  <text x="42" y="503" fill="#62798c" font-size="16" font-family="PingFang SC,Arial,sans-serif">本图只展开一个工具注册的 effect；省略依赖变化和投影注册。</text>
+</svg>

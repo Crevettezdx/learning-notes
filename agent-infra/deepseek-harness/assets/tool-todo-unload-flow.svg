@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1390" viewBox="0 0 1700 1390" role="img" aria-labelledby="dsh-flow-title dsh-flow-desc">
+<title id="dsh-flow-title">tool-todo 的依赖、注册、事件和撤出</title>
+<desc id="dsh-flow-desc">六列分别为 tools 服务、sessionProjections 服务、Cordis、tool-todo 插件代码、该次挂载的 Fiber 和 Session。上层展示依赖、调用、注册、会话事件。下层展示 tools 撤出后依赖失效、Fiber 停用及两项注册撤销。</desc>
+<defs>
+<marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#3973ad"/></marker>
+<marker id="a-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#b45e27"/></marker>
+<marker id="a-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#288061"/></marker>
+</defs>
+<rect width="1700" height="1390" fill="#f7f9fb"/>
+<text x="52" y="52" fill="#1c3344" font-size="31" font-weight="700" font-family="PingFang SC,Arial,sans-serif">tool-todo：从依赖到撤出</text>
+<text x="1648" y="50" text-anchor="end" fill="#688096" font-size="16" font-family="PingFang SC,Arial,sans-serif">蓝 依赖与调度　橙 注册与清理　绿 会话事件</text>
+<rect x="44" y="202" width="1612" height="710" rx="14" fill="#fff" stroke="#d6e0e9" stroke-width="2"/>
+<rect x="44" y="930" width="1612" height="416" rx="14" fill="#fff" stroke="#d6e0e9" stroke-width="2"/>
+<path d="M150 184 V1320" fill="none" stroke="#cbd6df" stroke-width="1.5" stroke-dasharray="6 9"/>
+<path d="M430 184 V1320" fill="none" stroke="#cbd6df" stroke-width="1.5" stroke-dasharray="6 9"/>
+<path d="M710 184 V1320" fill="none" stroke="#cbd6df" stroke-width="1.5" stroke-dasharray="6 9"/>
+<path d="M990 184 V1320" fill="none" stroke="#cbd6df" stroke-width="1.5" stroke-dasharray="6 9"/>
+<path d="M1260 184 V1320" fill="none" stroke="#cbd6df" stroke-width="1.5" stroke-dasharray="6 9"/>
+<path d="M1530 184 V1320" fill="none" stroke="#cbd6df" stroke-width="1.5" stroke-dasharray="6 9"/>
+<rect x="64" y="216" width="258" height="40" fill="#fff"/>
+<text x="66" y="245" text-anchor="start" fill="#27659d" font-size="23" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">上层：正常运行</text>
+<rect x="64" y="942" width="276" height="40" fill="#fff"/>
+<text x="66" y="973" text-anchor="start" fill="#a65220" font-size="23" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">下层：tools 撤出</text>
+<rect x="58.0" y="82.0" width="184" height="102" rx="10" fill="#eaf2fb" stroke="#93b9dc" stroke-width="2"/>
+<text x="150" y="121" text-anchor="middle" fill="#1c3344" font-size="24" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">tools</text>
+<text x="150" y="150" text-anchor="middle" fill="#536b7e" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">工具服务</text>
+<text x="150" y="172" text-anchor="middle" fill="#536b7e" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">注册 / 分发</text>
+<rect x="296.0" y="82.0" width="268" height="102" rx="10" fill="#eaf2fb" stroke="#93b9dc" stroke-width="2"/>
+<text x="430" y="121" text-anchor="middle" fill="#1c3344" font-size="20" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">sessionProjections</text>
+<text x="430" y="150" text-anchor="middle" fill="#536b7e" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">投影服务</text>
+<text x="430" y="172" text-anchor="middle" fill="#536b7e" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">注册 / 计算</text>
+<rect x="606.0" y="82.0" width="208" height="102" rx="10" fill="#eaf2fb" stroke="#93b9dc" stroke-width="2"/>
+<text x="710" y="121" text-anchor="middle" fill="#1c3344" font-size="24" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">Cordis</text>
+<text x="710" y="150" text-anchor="middle" fill="#536b7e" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">检查依赖</text>
+<text x="710" y="172" text-anchor="middle" fill="#536b7e" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">管理生命周期</text>
+<rect x="870.0" y="82.0" width="240" height="102" rx="10" fill="#f4f6f8" stroke="#aebecb" stroke-width="2"/>
+<text x="990" y="121" text-anchor="middle" fill="#1c3344" font-size="24" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">tool-todo</text>
+<text x="990" y="150" text-anchor="middle" fill="#536b7e" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">插件代码</text>
+<text x="990" y="172" text-anchor="middle" fill="#536b7e" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">inject / apply</text>
+<rect x="1155.0" y="82.0" width="210" height="102" rx="10" fill="#fff0e5" stroke="#ddb188" stroke-width="2"/>
+<text x="1260" y="121" text-anchor="middle" fill="#1c3344" font-size="24" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">Fiber #1</text>
+<text x="1260" y="150" text-anchor="middle" fill="#536b7e" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">本次挂载实例</text>
+<text x="1260" y="172" text-anchor="middle" fill="#536b7e" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">状态 / 清理动作</text>
+<rect x="1420.0" y="82.0" width="220" height="102" rx="10" fill="#eaf6ef" stroke="#a5cbb2" stroke-width="2"/>
+<text x="1530" y="121" text-anchor="middle" fill="#1c3344" font-size="24" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">Session</text>
+<text x="1530" y="150" text-anchor="middle" fill="#536b7e" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">事件与日志</text>
+<text x="1530" y="172" text-anchor="middle" fill="#536b7e" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">历史记录</text>
+<path d="M990 294 H722" fill="none" stroke="#3973ad" stroke-width="3"/>
+<polygon points="714,294 727,286 727,302" fill="#3973ad"/>
+<rect x="736.0" y="262" width="228" height="24" rx="3" fill="#fff"/>
+<text x="850.0" y="280" text-anchor="middle" fill="#3973ad" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">① inject 声明两项依赖</text>
+<path d="M150 344 H698" fill="none" stroke="#3973ad" stroke-width="3"/>
+<polygon points="706,344 693,336 693,352" fill="#3973ad"/>
+<rect x="339.0" y="312" width="182" height="24" rx="3" fill="#fff"/>
+<text x="430.0" y="330" text-anchor="middle" fill="#3973ad" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">② tools 可用</text>
+<path d="M430 394 H698" fill="none" stroke="#3973ad" stroke-width="3"/>
+<polygon points="706,394 693,386 693,402" fill="#3973ad"/>
+<rect x="465.0" y="362" width="210" height="24" rx="3" fill="#fff"/>
+<text x="570.0" y="380" text-anchor="middle" fill="#3973ad" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">② 投影服务可用</text>
+<path d="M710 444 H1248" fill="none" stroke="#3973ad" stroke-width="3"/>
+<polygon points="1256,444 1243,436 1243,452" fill="#3973ad"/>
+<rect x="870.0" y="412" width="230" height="24" rx="3" fill="#fff"/>
+<text x="985.0" y="430" text-anchor="middle" fill="#3973ad" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">③ 依赖齐全 → Fiber 开始加载</text>
+<path d="M710 494 H978" fill="none" stroke="#3973ad" stroke-width="3"/>
+<polygon points="986,494 973,486 973,502" fill="#3973ad"/>
+<rect x="742.0" y="462" width="216" height="24" rx="3" fill="#fff"/>
+<text x="850.0" y="480" text-anchor="middle" fill="#3973ad" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">④ 调用 apply(ctx)</text>
+<path d="M990 544 H442" fill="none" stroke="#b45e27" stroke-width="3"/>
+<polygon points="434,544 447,536 447,552" fill="#b45e27"/>
+<rect x="589.0" y="512" width="242" height="24" rx="3" fill="#fff"/>
+<text x="710.0" y="530" text-anchor="middle" fill="#b45e27" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">⑤ register(todos)</text>
+<path d="M990 594 H162" fill="none" stroke="#b45e27" stroke-width="3"/>
+<polygon points="154,594 167,586 167,602" fill="#b45e27"/>
+<rect x="433.0" y="562" width="274" height="24" rx="3" fill="#fff"/>
+<text x="570.0" y="580" text-anchor="middle" fill="#b45e27" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">⑥ register(todo_write)</text>
+<path d="M430 644 H1248" fill="none" stroke="#b45e27" stroke-width="3"/>
+<polygon points="1256,644 1243,636 1243,652" fill="#b45e27"/>
+<rect x="714.0" y="612" width="262" height="24" rx="3" fill="#fff"/>
+<text x="845.0" y="630" text-anchor="middle" fill="#b45e27" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">⑦ 投影清理归属 Fiber</text>
+<path d="M150 694 H1248" fill="none" stroke="#b45e27" stroke-width="3"/>
+<polygon points="1256,694 1243,686 1243,702" fill="#b45e27"/>
+<rect x="574.0" y="662" width="262" height="24" rx="3" fill="#fff"/>
+<text x="705.0" y="680" text-anchor="middle" fill="#b45e27" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">⑦ 工具清理归属 Fiber</text>
+<path d="M150 744 H978" fill="none" stroke="#288061" stroke-width="3"/>
+<polygon points="986,744 973,736 973,752" fill="#288061"/>
+<rect x="455.0" y="712" width="230" height="24" rx="3" fill="#fff"/>
+<text x="570.0" y="730" text-anchor="middle" fill="#288061" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">⑧ 执行 todo_write</text>
+<path d="M990 794 H1518" fill="none" stroke="#288061" stroke-width="3"/>
+<polygon points="1526,794 1513,786 1513,802" fill="#288061"/>
+<rect x="1130.0" y="762" width="260" height="24" rx="3" fill="#fff"/>
+<text x="1260.0" y="780" text-anchor="middle" fill="#288061" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">⑨ append(todo/write)</text>
+<path d="M1530 844 H442" fill="none" stroke="#288061" stroke-width="3"/>
+<polygon points="434,844 447,836 447,852" fill="#288061"/>
+<rect x="832.0" y="812" width="296" height="24" rx="3" fill="#fff"/>
+<text x="980.0" y="830" text-anchor="middle" fill="#288061" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">⑩ session/event → todos</text>
+<text x="150" y="782" text-anchor="middle" fill="#688096" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">Agent 调用工具后</text>
+<path d="M150 1034 H698" fill="none" stroke="#3973ad" stroke-width="3"/>
+<polygon points="706,1034 693,1026 693,1042" fill="#3973ad"/>
+<rect x="338.0" y="1002" width="184" height="24" rx="3" fill="#fff"/>
+<text x="430.0" y="1020" text-anchor="middle" fill="#3973ad" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">① tools 撤出</text>
+<path d="M710 1090 H1248" fill="none" stroke="#3973ad" stroke-width="3"/>
+<polygon points="1256,1090 1243,1082 1243,1098" fill="#3973ad"/>
+<rect x="891.0" y="1058" width="188" height="24" rx="3" fill="#fff"/>
+<text x="985.0" y="1076" text-anchor="middle" fill="#3973ad" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">② Fiber 停用</text>
+<path d="M1260 1146 H162" fill="none" stroke="#b45e27" stroke-width="3"/>
+<polygon points="154,1146 167,1138 167,1154" fill="#b45e27"/>
+<rect x="562.0" y="1114" width="286" height="24" rx="3" fill="#fff"/>
+<text x="705.0" y="1132" text-anchor="middle" fill="#b45e27" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">③ 撤销 todo_write 注册</text>
+<path d="M1260 1202 H442" fill="none" stroke="#b45e27" stroke-width="3"/>
+<polygon points="434,1202 447,1194 447,1210" fill="#b45e27"/>
+<rect x="726.0" y="1170" width="238" height="24" rx="3" fill="#fff"/>
+<text x="845.0" y="1188" text-anchor="middle" fill="#b45e27" font-size="18" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">④ 撤销 todos 注册</text>
+<rect x="68.0" y="1270" width="164" height="56" rx="8" fill="#fff0ee" stroke="#e6b1a7" stroke-width="1.5"/>
+<text x="150" y="1305" text-anchor="middle" fill="#a34d45" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">tools 不可用</text>
+<rect x="318.0" y="1270" width="224" height="56" rx="8" fill="#eaf2fb" stroke="#b6cde2" stroke-width="1.5"/>
+<text x="430" y="1305" text-anchor="middle" fill="#436d8e" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">投影服务仍在</text>
+<rect x="1148.0" y="1270" width="224" height="56" rx="8" fill="#f1f4f6" stroke="#bdc9d3" stroke-width="1.5"/>
+<text x="1260" y="1305" text-anchor="middle" fill="#576a78" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">Fiber 等待依赖</text>
+<rect x="1420.0" y="1270" width="220" height="56" rx="8" fill="#eaf6ef" stroke="#a5cbb2" stroke-width="1.5"/>
+<text x="1530" y="1305" text-anchor="middle" fill="#2b7453" font-size="16" font-weight="400" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">历史事件保留</text>
+</svg>

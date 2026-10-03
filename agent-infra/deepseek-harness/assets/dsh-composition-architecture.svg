@@ -1,0 +1,312 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1580" height="2616" viewBox="0 0 1580 2616" role="img" aria-labelledby="dsh-composition-architecture-title dsh-composition-architecture-desc">
+<title id="dsh-composition-architecture-title">DSH 从配置装配到插件实例与运行流程</title>
+<desc id="dsh-composition-architecture-desc">profile 按顺序选择 bundle，叠加参数补丁形成插件配置树，Loader 将条目变成实例。中层放大待办实例的插件代码、Context 服务入口与 Fiber 依赖及清理记录。下层用统一插件标记和一至八步编号，展示 agent 循环、模型、工具、会话事件和投影的协作。</desc>
+<defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#62798c"/></marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#b45e27"/></marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#3973ad"/></marker>
+</defs>
+<rect x="0" y="0" width="1580" height="2616" rx="0" fill="#f7f9fb" stroke="#f7f9fb" stroke-width="0"/>
+<text x="48" y="52" font-family="PingFang SC,Arial,sans-serif" font-size="32" font-weight="700" fill="#1c3344" text-anchor="start">DSH：配置如何成为运行中的插件组合</text>
+<text x="48" y="92" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="400" fill="#62798c" text-anchor="start">A 看装配关系，B 放大一个实例，C 沿编号追踪一次含工具调用的任务。</text>
+<g id="assembly">
+<rect x="40" y="120" width="1500" height="680" rx="8" fill="#f7f9fb" stroke="#b9cbd9" stroke-width="2"/>
+<text x="64" y="160" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="start">A  配置装配：profile 选择配置层，Loader 建立实例</text>
+<rect x="300" y="196" width="500" height="328" rx="8" fill="#edf1f5" stroke="#b9cbd9" stroke-width="2"/>
+<text x="324" y="232" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="start">profile: web  ·  一套运行方案</text>
+<text x="324" y="260" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="start">按顺序选择 bundle；本方案可再覆盖参数</text>
+<rect x="1124" y="196" width="392" height="432" rx="8" fill="white" stroke="#b9cbd9" stroke-width="2"/>
+<text x="1148" y="232" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="start">最终插件配置树（节选）</text>
+<path d="M240 292 L300 292" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="300,292 288,286 288,298" fill="#b45e27"/>
+<path d="M800 360 L872 360" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="872,360 860,354 860,366" fill="#b45e27"/>
+<path d="M800 584 L828.0 584.0 Q836 584 836.0 576.0 L836.0 448.0 Q836 440 844.0 440.0 L872 440" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="872,440 860,434 860,446" fill="#b45e27"/>
+<path d="M1052 396 L1124 396" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="1124,396 1112,390 1112,402" fill="#b45e27"/>
+<path d="M1320 628 L1320 656" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="1320,656 1314,644 1326,644" fill="#b45e27"/>
+<path d="M300 472 L264.0 472.0 Q256 472 256.0 480.0 L256.0 624.0 Q256 632 264.0 632.0 L616.0 632.0 Q624 632 624.0 640.0 L624 656" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="624,656 618,644 630,644" fill="#b45e27"/>
+<path d="M152 364 L152.0 700.0 Q152 708 160.0 708.0 L500 708" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="500,708 488,702 488,714" fill="#b45e27"/>
+<rect x="230.0" y="660" width="196" height="32" fill="#f7f9fb"/>
+<text x="328" y="684" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#b45e27" text-anchor="middle">插件代码变化</text>
+<path d="M860 708 L1124 708" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="1124,708 1112,702 1112,714" fill="#b45e27"/>
+<rect x="886.0" y="660" width="212" height="32" fill="#f7f9fb"/>
+<text x="992" y="684" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#b45e27" text-anchor="middle">请求更新 / 重载</text>
+<rect x="64" y="220" width="176" height="144" rx="8" fill="#edf1f5" stroke="#b9cbd9" stroke-width="2"/>
+<text x="152.0" y="256" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="middle">使用者</text>
+<text x="152.0" y="288" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">选择运行方案</text>
+<text x="152.0" y="316" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">调整参数</text>
+<text x="152.0" y="344" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">修改插件代码</text>
+<rect x="332" y="288" width="208" height="104" rx="4" fill="#f7f9fb" stroke="#b9cbd9" stroke-width="2"/>
+<rect x="328" y="284" width="208" height="104" rx="4" fill="#f7f9fb" stroke="#b9cbd9" stroke-width="2"/>
+<rect x="324" y="280" width="208" height="104" rx="4" fill="white" stroke="#b9cbd9" stroke-width="2"/>
+<text x="340" y="308" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="700" fill="#1c3344" text-anchor="start">dsh-base</text>
+<text x="340" y="336" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="start">基础能力 bundle</text>
+<text x="340" y="364" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="400" fill="#62798c" text-anchor="start">配置条目 + 插件代码</text>
+<rect x="568" y="288" width="208" height="104" rx="4" fill="#f7f9fb" stroke="#b9cbd9" stroke-width="2"/>
+<rect x="564" y="284" width="208" height="104" rx="4" fill="#f7f9fb" stroke="#b9cbd9" stroke-width="2"/>
+<rect x="560" y="280" width="208" height="104" rx="4" fill="white" stroke="#b9cbd9" stroke-width="2"/>
+<text x="576" y="308" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="700" fill="#1c3344" text-anchor="start">dsh-web-app</text>
+<text x="576" y="336" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="start">Web 能力 bundle</text>
+<text x="576" y="364" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="400" fill="#62798c" text-anchor="start">配置条目 + 插件代码</text>
+<text x="548" y="336" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#62798c" text-anchor="middle">→</text>
+<rect x="324" y="412" width="452" height="88" rx="4" fill="white" stroke="#b9cbd9" stroke-width="2"/>
+<text x="340" y="440" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="700" fill="#1c3344" text-anchor="start">profile patch  ·  本方案的覆盖项</text>
+<text x="340" y="472" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="start">例如：调整 tool-todo 的 config 参数</text>
+<rect x="300" y="548" width="500" height="72" rx="8" fill="white" stroke="#b9cbd9" stroke-width="2"/>
+<text x="550.0" y="584" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="middle">home patch → --patch（可选）</text>
+<text x="550.0" y="616" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">继续覆盖或补充条目</text>
+<rect x="872" y="316" width="180" height="160" rx="8" fill="white" stroke="#b9cbd9" stroke-width="2"/>
+<text x="962.0" y="352" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="middle">app-boot</text>
+<text x="962.0" y="384" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">按顺序应用</text>
+<text x="962.0" y="412" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">各配置层</text>
+<text x="962.0" y="440" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">按 id 覆盖 / 新增</text>
+<path d="M1160 276 V488 M1160 296 H1188 M1160 352 H1188 M1160 408 H1188 M1160 464 H1188" fill="none" stroke="#62798c" stroke-width="2"/>
+<rect x="1188" y="276" width="300" height="40" rx="4" fill="#f7f9fb" stroke="#b9cbd9" stroke-width="1"/>
+<text x="1200" y="304" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#1c3344" text-anchor="start">agent-loop</text>
+<rect x="1188" y="332" width="300" height="40" rx="4" fill="#f7f9fb" stroke="#b9cbd9" stroke-width="1"/>
+<text x="1200" y="360" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#1c3344" text-anchor="start">system-prompt</text>
+<rect x="1188" y="388" width="300" height="40" rx="4" fill="#f7f9fb" stroke="#b9cbd9" stroke-width="1"/>
+<text x="1200" y="416" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#1c3344" text-anchor="start">tools</text>
+<rect x="1188" y="444" width="300" height="164" rx="4" fill="#edf6f1" stroke="#35745b" stroke-width="2"/>
+<text x="1204" y="472" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="700" fill="#1c3344" text-anchor="start">id: tool-todo</text>
+<text x="1204" y="500" font-family="PingFang SC,Arial,sans-serif" font-size="16" font-weight="400" fill="#62798c" text-anchor="start">name: @deepseek-ai/dsh-tool-todo</text>
+<text x="1204" y="528" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="400" fill="#62798c" text-anchor="start">config</text>
+<rect x="1204" y="544" width="268" height="40" rx="4" fill="white" stroke="#b9cbd9" stroke-width="1"/>
+<text x="1212" y="570" font-family="PingFang SC,Arial,sans-serif" font-size="16" font-weight="500" fill="#1c3344" text-anchor="start">allowParallelInProgress: true</text>
+<rect x="500" y="656" width="360" height="104" rx="8" fill="white" stroke="#b9cbd9" stroke-width="2"/>
+<text x="680.0" y="692" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="middle">HMR 变更协调</text>
+<text x="680.0" y="724" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">监听配置；源码监听按需开启</text>
+<rect x="1124" y="656" width="392" height="104" rx="8" fill="#fcf1e9" stroke="#b45e27" stroke-width="2"/>
+<text x="1320.0" y="692" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="middle">Loader 加载器</text>
+<text x="1320.0" y="724" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">按 id 对照条目，创建 / 更新 / 移除</text>
+<text x="64" y="780" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="start">bundle 提供配置与代码；配置层合成条目树，条目再映射为运行实例。</text>
+</g>
+<g id="instance">
+<rect x="40" y="840" width="1500" height="632" rx="8" fill="#f7f9fb" stroke="#b9cbd9" stroke-width="2"/>
+<text x="64" y="880" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="start">B  Cordis：放大 tool-todo 的一个实例</text>
+<text x="64" y="912" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="start">每个插件实例都有自己的 Context 与 Fiber；下面具体展示它们分别承载什么。</text>
+<rect x="408" y="936" width="1100" height="416" rx="8" fill="white" stroke="#b9cbd9" stroke-width="2"/>
+<text x="432" y="964" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="start">一个实例：代码用 ctx 调服务，Fiber 保留本轮运行记录</text>
+<path d="M1320 760 L1320 936" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="1320,936 1314,924 1326,924" fill="#b45e27"/>
+<rect x="1336" y="800" width="180" height="32" fill="#f7f9fb"/>
+<text x="1336" y="824" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#b45e27" text-anchor="start">建立 / 调整实例</text>
+<path d="M336 1072 L432 1072" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="432,1072 420,1066 420,1078" fill="#b45e27"/>
+<rect x="348.0" y="1024" width="72" height="32" fill="#f7f9fb"/>
+<text x="384" y="1048" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#b45e27" text-anchor="middle">执行</text>
+<path d="M680 1104 L752 1104" fill="none" stroke="#35745b" stroke-width="2.8"/>
+<polygon points="752,1104 740,1098 740,1110" fill="#35745b"/>
+<path d="M680 1168 L752 1168" fill="none" stroke="#35745b" stroke-width="2.8"/>
+<polygon points="752,1168 740,1162 740,1174" fill="#35745b"/>
+<path d="M1152.0 1112.0 L1144.0 1112.0 M1138.0 1112.0 L1130.0 1112.0 M1124.0 1112.0 L1116.0 1112.0 M1110.0 1112.0 L1102.0 1112.0 M1096.0 1112.0 L1088.0 1112.0 M1082.0 1112.0 L1074.0 1112.0 M1068.0 1112.0 L1060.0 1112.0 M1054.0 1112.0 L1046.0 1112.0 M1040.0 1112.0 L1032.0 1112.0 M1026.0 1112.0 L1024.0 1112.0" fill="none" stroke="#35745b" stroke-width="2.8"/>
+<polygon points="1024,1112 1036,1106 1036,1118" fill="#35745b"/>
+<rect x="1032.0" y="1066" width="112" height="30" fill="#f7f9fb"/>
+<text x="1088" y="1088" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="500" fill="#35745b" text-anchor="middle">依赖引用</text>
+<path d="M1024 1240 L1152 1240" fill="none" stroke="#35745b" stroke-width="2.8"/>
+<polygon points="1152,1240 1140,1234 1140,1246" fill="#35745b"/>
+<rect x="1026.0" y="1194" width="124" height="30" fill="#f7f9fb"/>
+<text x="1088" y="1216" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="500" fill="#35745b" text-anchor="middle">记录撤销动作</text>
+<path d="M208 1268 L208.0 1408.0 Q208 1416 216.0 1416.0 L1312.0 1416.0 Q1320 1416 1320.0 1408.0 L1320 1312" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="1320,1312 1314,1324 1326,1324" fill="#b45e27"/>
+<polygon points="208,1268 202,1280 214,1280" fill="#b45e27"/>
+<rect x="426.0" y="1368" width="700" height="32" fill="#f7f9fb"/>
+<text x="776" y="1392" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#b45e27" text-anchor="middle">生命周期读写运行记录；退出时执行已记录的清理动作</text>
+<rect x="64" y="980" width="272" height="288" rx="8" fill="#fcf1e9" stroke="#b45e27" stroke-width="2"/>
+<text x="88" y="1016" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="start">生命周期协调</text>
+<rect x="88" y="1044" width="224" height="40" rx="4" fill="white" stroke="#b9cbd9" stroke-width="1"/>
+<text x="100" y="1072" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#1c3344" text-anchor="start">依赖齐全 → 加载</text>
+<rect x="88" y="1112" width="224" height="40" rx="4" fill="white" stroke="#b9cbd9" stroke-width="1"/>
+<text x="100" y="1140" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#1c3344" text-anchor="start">稳定运行</text>
+<rect x="88" y="1180" width="224" height="40" rx="4" fill="white" stroke="#b9cbd9" stroke-width="1"/>
+<text x="100" y="1208" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#1c3344" text-anchor="start">停用 → 完成清理</text>
+<path d="M200 1084 L200 1112" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="200,1112 194,1100 206,1100" fill="#b45e27"/>
+<path d="M200 1152 L200 1180" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="200,1180 194,1168 206,1168" fill="#b45e27"/>
+<rect x="432" y="984" width="248" height="284" rx="8" fill="#f7f9fb" stroke="#b9cbd9" stroke-width="2"/>
+<text x="448" y="1016" font-family="PingFang SC,Arial,sans-serif" font-size="22" font-weight="700" fill="#1c3344" text-anchor="start">tool-todo 插件代码</text>
+<text x="448" y="1052" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="start">apply(ctx, config)</text>
+<rect x="448" y="1080" width="216" height="40" rx="4" fill="#edf6f1" stroke="#b9cbd9" stroke-width="1"/>
+<text x="460" y="1108" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="500" fill="#1c3344" text-anchor="start">登记 todo_write</text>
+<rect x="448" y="1144" width="216" height="40" rx="4" fill="#edf6f1" stroke="#b9cbd9" stroke-width="1"/>
+<text x="460" y="1172" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="500" fill="#1c3344" text-anchor="start">登记 todos 规则</text>
+<text x="448" y="1212" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="400" fill="#62798c" text-anchor="start">收到配置参数：</text>
+<text x="448" y="1240" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#1c3344" text-anchor="start">允许多个待办进行中</text>
+<rect x="752" y="984" width="272" height="284" rx="8" fill="#eaf2fb" stroke="#3973ad" stroke-width="2"/>
+<text x="772" y="1016" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="start">Context（ctx）</text>
+<text x="772" y="1052" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="start">本实例的服务访问入口</text>
+<rect x="768" y="1080" width="240" height="44" rx="4" fill="white" stroke="#b9cbd9" stroke-width="1"/>
+<text x="780" y="1108" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="500" fill="#1c3344" text-anchor="start">ctx.tools</text>
+<circle cx="1008" cy="1102" r="5" fill="#3973ad"/>
+<rect x="768" y="1144" width="240" height="44" rx="4" fill="white" stroke="#b9cbd9" stroke-width="1"/>
+<text x="780" y="1172" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="500" fill="#1c3344" text-anchor="start">ctx.sessionProjections</text>
+<circle cx="1008" cy="1166" r="5" fill="#3973ad"/>
+<text x="772" y="1212" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="400" fill="#62798c" text-anchor="start">访问依赖；建立受管理注册</text>
+<rect x="1152" y="984" width="344" height="328" rx="8" fill="#edf1f5" stroke="#b9cbd9" stroke-width="2"/>
+<text x="1172" y="1016" font-family="PingFang SC,Arial,sans-serif" font-size="22" font-weight="700" fill="#1c3344" text-anchor="start">Fiber：本实例的运行记录</text>
+<rect x="1172" y="1036" width="168" height="40" rx="4" fill="#edf6f1" stroke="#b9cbd9" stroke-width="1"/>
+<text x="1184" y="1064" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="500" fill="#35745b" text-anchor="start">状态：Active</text>
+<text x="1172" y="1104" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="700" fill="#1c3344" text-anchor="start">本轮依赖引用</text>
+<text x="1172" y="1136" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="400" fill="#62798c" text-anchor="start">tools → 工具服务</text>
+<text x="1172" y="1168" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="400" fill="#62798c" text-anchor="start">sessionProjections → 投影服务</text>
+<text x="1172" y="1204" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="700" fill="#1c3344" text-anchor="start">清理记录</text>
+<text x="1172" y="1240" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#35745b" text-anchor="start">撤销 todo_write 登记</text>
+<text x="1172" y="1276" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#35745b" text-anchor="start">撤销 todos 规则登记</text>
+<text x="432" y="1332" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="400" fill="#62798c" text-anchor="start">示意：这些引用和清理动作属于这一轮运行；下一轮会重新建立。</text>
+</g>
+<path d="M520 1472 L520 1560" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="520,1560 514,1548 526,1548" fill="#b45e27"/>
+<rect x="540" y="1504" width="360" height="32" fill="#f7f9fb"/>
+<text x="540" y="1528" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#b45e27" text-anchor="start">用同样机制管理下方各插件实例</text>
+<path d="M1160.0 1560.0 L1160.0 1552.0 M1160.0 1546.0 L1160.0 1538.0 M1160.0 1532.0 L1160.0 1524.0 M1160.0 1518.0 L1160.0 1510.0 M1160.0 1504.0 L1160.0 1496.0 M1160.0 1490.0 L1160.0 1482.0 M1160.0 1476.0 L1160.0 1472.0" fill="none" stroke="#35745b" stroke-width="2.8"/>
+<polygon points="1160,1472 1154,1484 1166,1484" fill="#35745b"/>
+<rect x="1176" y="1504" width="264" height="32" fill="#f7f9fb"/>
+<text x="1176" y="1528" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#35745b" text-anchor="start">服务变化 → 重查依赖</text>
+<g id="runtime" transform="translate(0 848)">
+<rect x="40" y="712" width="1500" height="896" rx="8" fill="#f7f9fb" stroke="#b9cbd9" stroke-width="2"/>
+<text x="64" y="748" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="start">C  运行协作：按 ①—⑧ 跟随一次含工具调用的任务</text>
+<text x="64" y="784" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="start">带插头标记的是配置加载的插件；模型接入由多个插件协作，外部模型单独标出。</text>
+<path d="M280 856 L400 856" fill="none" stroke="#3973ad" stroke-width="2.8"/>
+<polygon points="400,856 388,850 388,862" fill="#3973ad"/>
+<polygon points="280,856 292,850 292,862" fill="#3973ad"/>
+<rect x="282.0" y="810" width="116" height="30" fill="#f7f9fb"/>
+<text x="340" y="832" font-family="PingFang SC,Arial,sans-serif" font-size="18" font-weight="500" fill="#3973ad" text-anchor="middle">①任务/⑧答复</text>
+<path d="M680 844 L840 844" fill="none" stroke="#3973ad" stroke-width="2.8"/>
+<polygon points="840,844 828,838 828,850" fill="#3973ad"/>
+<polygon points="680,844 692,838 692,850" fill="#3973ad"/>
+<rect x="688.0" y="796" width="144" height="32" fill="#f7f9fb"/>
+<text x="760" y="820" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#3973ad" text-anchor="middle">③请求/④输出</text>
+<path d="M1080 844 L1280 844" fill="none" stroke="#3973ad" stroke-width="2.8"/>
+<polygon points="1280,844 1268,838 1268,850" fill="#3973ad"/>
+<polygon points="1080,844 1092,838 1092,850" fill="#3973ad"/>
+<rect x="1104.0" y="796" width="152" height="32" fill="#f7f9fb"/>
+<text x="1180" y="820" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#3973ad" text-anchor="middle">③请求/④输出</text>
+<path d="M520 1080 L520 912" fill="none" stroke="#3973ad" stroke-width="2.8"/>
+<polygon points="520,912 514,924 526,924" fill="#3973ad"/>
+<rect x="536" y="984" width="120" height="32" fill="#f7f9fb"/>
+<text x="536" y="1008" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#3973ad" text-anchor="start">② 请求材料</text>
+<path d="M840 1112 L680 1112" fill="none" stroke="#3973ad" stroke-width="2.8"/>
+<polygon points="680,1112 692,1106 692,1118" fill="#3973ad"/>
+<rect x="696.0" y="1064" width="128" height="32" fill="#f7f9fb"/>
+<text x="760" y="1088" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#3973ad" text-anchor="middle">工具说明</text>
+<path d="M680 888 L772.0 888.0 Q780 888 780.0 896.0 L780.0 1032.0 Q780 1040 788.0 1040.0 L892.0 1040.0 Q900 1040 900.0 1048.0 L900 1080" fill="none" stroke="#3973ad" stroke-width="2.8"/>
+<polygon points="900,1080 894,1068 906,1068" fill="#3973ad"/>
+<polygon points="680,888 692,882 692,894" fill="#3973ad"/>
+<rect x="796" y="992" width="148" height="32" fill="#f7f9fb"/>
+<text x="796" y="1016" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#3973ad" text-anchor="start">⑤调用/⑦结果</text>
+<path d="M1080 1176 L1280 1176" fill="none" stroke="#3973ad" stroke-width="2.8"/>
+<polygon points="1280,1176 1268,1170 1268,1182" fill="#3973ad"/>
+<polygon points="1080,1176 1092,1170 1092,1182" fill="#3973ad"/>
+<rect x="1100.0" y="1128" width="160" height="32" fill="#f7f9fb"/>
+<text x="1180" y="1152" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#3973ad" text-anchor="middle">⑤调用/⑦结果</text>
+<path d="M400 888 L344.0 888.0 Q336 888 336.0 896.0 L336 1392" fill="none" stroke="#3973ad" stroke-width="2.8"/>
+<polygon points="336,1392 330,1380 342,1380" fill="#3973ad"/>
+<polygon points="400,888 388,882 388,894" fill="#3973ad"/>
+<rect x="136" y="1120" width="180" height="32" fill="#f7f9fb"/>
+<text x="316" y="1144" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#3973ad" text-anchor="end">写入交互事件</text>
+<rect x="136" y="1156" width="180" height="32" fill="#f7f9fb"/>
+<text x="316" y="1180" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#3973ad" text-anchor="end">② 读会话历史</text>
+<path d="M1280 1192 H1208 Q1200 1192 1200 1200 V1296 Q1200 1304 1192 1304 H344 A8 8 0 0 0 328 1304 H248 Q240 1304 240 1312 V1392" fill="none" stroke="#3973ad" stroke-width="2.8"/>
+<polygon points="240,1392 234,1380 246,1380" fill="#3973ad"/>
+<rect x="506.0" y="1256" width="484" height="32" fill="#f7f9fb"/>
+<text x="748" y="1280" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#3973ad" text-anchor="middle">⑥a  写入 todo/write 会话事件</text>
+<path d="M360 1452 L1100 1452" fill="none" stroke="#3973ad" stroke-width="2.8"/>
+<polygon points="1100,1452 1088,1446 1088,1458" fill="#3973ad"/>
+<rect x="524.0" y="1404" width="384" height="32" fill="#f7f9fb"/>
+<text x="716" y="1428" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#3973ad" text-anchor="middle">⑥b  事件经规则计算当前待办状态</text>
+<path d="M1400.0 1080.0 L1400.0 1072.0 M1400.0 1066.0 L1400.0 1058.0 M1400.0 1052.0 L1400.0 1044.0 M1400.0 1038.0 L1400.0 1030.0 M1400.0 1024.0 L1400.0 1016.0 M1400.0 1010.0 L1400.0 1002.0 M1400.0 1000.0 Q1400 992 1392.0 992.0 M1392.0 992.0 L1384.0 992.0 M1378.0 992.0 L1370.0 992.0 M1364.0 992.0 L1356.0 992.0 M1350.0 992.0 L1342.0 992.0 M1336.0 992.0 L1328.0 992.0 M1322.0 992.0 L1314.0 992.0 M1308.0 992.0 L1300.0 992.0 M1294.0 992.0 L1286.0 992.0 M1280.0 992.0 L1272.0 992.0 M1266.0 992.0 L1258.0 992.0 M1252.0 992.0 L1244.0 992.0 M1238.0 992.0 L1230.0 992.0 M1224.0 992.0 L1216.0 992.0 M1210.0 992.0 L1202.0 992.0 M1196.0 992.0 L1188.0 992.0 M1182.0 992.0 L1174.0 992.0 M1168.0 992.0 L1160.0 992.0 M1154.0 992.0 L1146.0 992.0 M1140.0 992.0 L1132.0 992.0 M1126.0 992.0 L1118.0 992.0 M1112.0 992.0 L1104.0 992.0 M1098.0 992.0 L1090.0 992.0 M1084.0 992.0 L1076.0 992.0 M1070.0 992.0 L1062.0 992.0 M1056.0 992.0 L1048.0 992.0 M1042.0 992.0 L1034.0 992.0 M1028.0 992.0 Q1020 992 1020.0 1000.0 M1020.0 1000.0 L1020.0 1008.0 M1020.0 1014.0 L1020.0 1022.0 M1020.0 1028.0 L1020.0 1036.0 M1020.0 1042.0 L1020.0 1050.0 M1020.0 1056.0 L1020.0 1064.0 M1020.0 1070.0 L1020.0 1078.0" fill="none" stroke="#35745b" stroke-width="2.8"/>
+<polygon points="1020,1080 1014,1068 1026,1068" fill="#35745b"/>
+<rect x="1104.0" y="944" width="200" height="32" fill="#f7f9fb"/>
+<text x="1204" y="968" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#35745b" text-anchor="middle">依赖 tools</text>
+<path d="M1280 1112 L1080 1112" fill="none" stroke="#35745b" stroke-width="2.8"/>
+<polygon points="1080,1112 1092,1106 1092,1118" fill="#35745b"/>
+<rect x="1086.0" y="1064" width="188" height="32" fill="#f7f9fb"/>
+<text x="1180" y="1088" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#35745b" text-anchor="middle">登记 todo_write</text>
+<path d="M1460.0 1224.0 L1460.0 1232.0 M1460.0 1238.0 L1460.0 1246.0 M1460.0 1252.0 L1460.0 1260.0 M1460.0 1266.0 L1460.0 1274.0 M1460.0 1280.0 L1460.0 1288.0 M1460.0 1294.0 L1460.0 1302.0 M1460.0 1308.0 L1460.0 1316.0 M1460.0 1322.0 L1460.0 1330.0 M1460.0 1336.0 L1460.0 1344.0 M1460.0 1350.0 L1460.0 1358.0 M1460.0 1364.0 L1460.0 1372.0 M1460.0 1378.0 L1460.0 1386.0" fill="none" stroke="#35745b" stroke-width="2.8"/>
+<polygon points="1460,1392 1454,1380 1466,1380" fill="#35745b"/>
+<rect x="1476" y="1272" width="64" height="32" fill="#f7f9fb"/>
+<text x="1476" y="1296" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#35745b" text-anchor="start">依赖</text>
+<path d="M1360 1224 L1360.0 1336.0 Q1360 1344 1352.0 1344.0 L1248.0 1344.0 Q1240 1344 1240.0 1352.0 L1240 1392" fill="none" stroke="#35745b" stroke-width="2.8"/>
+<polygon points="1240,1392 1234,1380 1246,1380" fill="#35745b"/>
+<rect x="1240.0" y="1296" width="112" height="32" fill="#f7f9fb"/>
+<text x="1296" y="1320" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="500" fill="#35745b" text-anchor="middle">登记 todos</text>
+<rect x="72" y="800" width="208" height="112" rx="8" fill="#edf1f5" stroke="#b9cbd9" stroke-width="2"/>
+<text x="176.0" y="836" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="middle">用户 / 界面</text>
+<text x="176.0" y="868" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">发起任务 · 接收答复</text>
+<rect x="400" y="800" width="280" height="112" rx="8" fill="white" stroke="#b9cbd9" stroke-width="2"/>
+<text x="540.0" y="836" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="middle">agent 循环</text>
+<text x="540.0" y="868" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">agent-loop</text>
+<text x="540.0" y="896" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">组织模型请求与工具调用</text>
+<rect x="840" y="800" width="240" height="112" rx="8" fill="white" stroke="#b9cbd9" stroke-width="2"/>
+<text x="960.0" y="836" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="middle">模型接入</text>
+<text x="960.0" y="868" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">llm 服务与适配器</text>
+<text x="960.0" y="896" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">转换并发送请求</text>
+<rect x="1280" y="800" width="224" height="112" rx="8" fill="#edf1f5" stroke="#b9cbd9" stroke-width="0"/>
+<path d="M1288.0 800.0 L1296.0 800.0 M1302.0 800.0 L1310.0 800.0 M1316.0 800.0 L1324.0 800.0 M1330.0 800.0 L1338.0 800.0 M1344.0 800.0 L1352.0 800.0 M1358.0 800.0 L1366.0 800.0 M1372.0 800.0 L1380.0 800.0 M1386.0 800.0 L1394.0 800.0 M1400.0 800.0 L1408.0 800.0 M1414.0 800.0 L1422.0 800.0 M1428.0 800.0 L1436.0 800.0 M1442.0 800.0 L1450.0 800.0 M1456.0 800.0 L1464.0 800.0 M1470.0 800.0 L1478.0 800.0 M1484.0 800.0 L1492.0 800.0 M1496.0 800.0 Q1504 800 1504.0 808.0 M1504.0 808.0 L1504.0 816.0 M1504.0 822.0 L1504.0 830.0 M1504.0 836.0 L1504.0 844.0 M1504.0 850.0 L1504.0 858.0 M1504.0 864.0 L1504.0 872.0 M1504.0 878.0 L1504.0 886.0 M1504.0 892.0 L1504.0 900.0 M1504.0 904.0 Q1504 912 1496.0 912.0 M1496.0 912.0 L1488.0 912.0 M1482.0 912.0 L1474.0 912.0 M1468.0 912.0 L1460.0 912.0 M1454.0 912.0 L1446.0 912.0 M1440.0 912.0 L1432.0 912.0 M1426.0 912.0 L1418.0 912.0 M1412.0 912.0 L1404.0 912.0 M1398.0 912.0 L1390.0 912.0 M1384.0 912.0 L1376.0 912.0 M1370.0 912.0 L1362.0 912.0 M1356.0 912.0 L1348.0 912.0 M1342.0 912.0 L1334.0 912.0 M1328.0 912.0 L1320.0 912.0 M1314.0 912.0 L1306.0 912.0 M1300.0 912.0 L1292.0 912.0 M1288.0 912.0 Q1280 912 1280.0 904.0 M1280.0 904.0 L1280.0 896.0 M1280.0 890.0 L1280.0 882.0 M1280.0 876.0 L1280.0 868.0 M1280.0 862.0 L1280.0 854.0 M1280.0 848.0 L1280.0 840.0 M1280.0 834.0 L1280.0 826.0 M1280.0 820.0 L1280.0 812.0 M1280.0 808.0 Q1280 800 1288.0 800.0" fill="none" stroke="#b9cbd9" stroke-width="2"/>
+<text x="1392.0" y="836" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="middle">外部模型服务</text>
+<text x="1392.0" y="868" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">回答或提出工具调用</text>
+<rect x="400" y="1080" width="280" height="112" rx="8" fill="white" stroke="#b9cbd9" stroke-width="2"/>
+<text x="540.0" y="1116" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="middle">请求内容组装</text>
+<text x="540.0" y="1148" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">systemPrompt</text>
+<text x="540.0" y="1176" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">提示词 + 工具说明</text>
+<rect x="840" y="1080" width="240" height="144" rx="8" fill="white" stroke="#b9cbd9" stroke-width="2"/>
+<text x="960.0" y="1116" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="middle">工具服务 tools</text>
+<text x="960.0" y="1148" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">工具登记表与调用分发</text>
+<text x="960.0" y="1176" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">todo_write → 执行函数</text>
+<rect x="1280" y="1080" width="224" height="144" rx="8" fill="#edf6f1" stroke="#35745b" stroke-width="2"/>
+<text x="1392.0" y="1116" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="middle">待办插件</text>
+<text x="1392.0" y="1148" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">tool-todo</text>
+<text x="1392.0" y="1176" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">定义 todo_write</text>
+<rect x="80" y="1392" width="280" height="136" rx="8" fill="#edf1f5" stroke="#b9cbd9" stroke-width="2"/>
+<text x="220.0" y="1428" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="middle">会话日志 sessions</text>
+<text x="220.0" y="1460" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">保存消息与工具事件</text>
+<text x="220.0" y="1488" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">包含 todo/write</text>
+<rect x="1100" y="1392" width="404" height="136" rx="8" fill="white" stroke="#b9cbd9" stroke-width="2"/>
+<text x="1302.0" y="1428" font-family="PingFang SC,Arial,sans-serif" font-size="24" font-weight="700" fill="#1c3344" text-anchor="middle">会话投影 sessionProjections</text>
+<text x="1302.0" y="1460" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">按 todos 规则计算当前待办状态</text>
+<text x="1302.0" y="1488" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="middle">供界面和其他读取方使用</text>
+<text x="80" y="1576" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="start">③—⑦可重复，直到给出⑧答复；⑥a / ⑥b 是会话状态更新支路。</text>
+<rect x="584" y="788" width="80" height="28" rx="4" fill="#eaf2fb" stroke="#3973ad" stroke-width="1.2"/>
+<path d="M596 792 v8 M608 792 v8 M594 800 h16 v8 h-16 Z M602 808 v4" fill="none" stroke="#3973ad" stroke-width="1.6"/>
+<text x="620" y="808" font-family="PingFang SC,Arial,sans-serif" font-size="16" font-weight="600" fill="#3973ad" text-anchor="start">插件</text>
+<rect x="968" y="788" width="96" height="28" rx="4" fill="#eaf2fb" stroke="#3973ad" stroke-width="1.2"/>
+<path d="M980 792 v8 M992 792 v8 M978 800 h16 v8 h-16 Z M986 808 v4" fill="none" stroke="#3973ad" stroke-width="1.6"/>
+<text x="1004" y="808" font-family="PingFang SC,Arial,sans-serif" font-size="16" font-weight="600" fill="#3973ad" text-anchor="start">插件组</text>
+<rect x="584" y="1068" width="80" height="28" rx="4" fill="#eaf2fb" stroke="#3973ad" stroke-width="1.2"/>
+<path d="M596 1072 v8 M608 1072 v8 M594 1080 h16 v8 h-16 Z M602 1088 v4" fill="none" stroke="#3973ad" stroke-width="1.6"/>
+<text x="620" y="1088" font-family="PingFang SC,Arial,sans-serif" font-size="16" font-weight="600" fill="#3973ad" text-anchor="start">插件</text>
+<rect x="920" y="1068" width="80" height="28" rx="4" fill="#eaf2fb" stroke="#3973ad" stroke-width="1.2"/>
+<path d="M932 1072 v8 M944 1072 v8 M930 1080 h16 v8 h-16 Z M938 1088 v4" fill="none" stroke="#3973ad" stroke-width="1.6"/>
+<text x="956" y="1088" font-family="PingFang SC,Arial,sans-serif" font-size="16" font-weight="600" fill="#3973ad" text-anchor="start">插件</text>
+<rect x="1408" y="1068" width="80" height="28" rx="4" fill="#eaf2fb" stroke="#3973ad" stroke-width="1.2"/>
+<path d="M1420 1072 v8 M1432 1072 v8 M1418 1080 h16 v8 h-16 Z M1426 1088 v4" fill="none" stroke="#3973ad" stroke-width="1.6"/>
+<text x="1444" y="1088" font-family="PingFang SC,Arial,sans-serif" font-size="16" font-weight="600" fill="#3973ad" text-anchor="start">插件</text>
+<rect x="136" y="1380" width="80" height="28" rx="4" fill="#eaf2fb" stroke="#3973ad" stroke-width="1.2"/>
+<path d="M148 1384 v8 M160 1384 v8 M146 1392 h16 v8 h-16 Z M154 1400 v4" fill="none" stroke="#3973ad" stroke-width="1.6"/>
+<text x="172" y="1400" font-family="PingFang SC,Arial,sans-serif" font-size="16" font-weight="600" fill="#3973ad" text-anchor="start">插件</text>
+<rect x="1280" y="1380" width="80" height="28" rx="4" fill="#eaf2fb" stroke="#3973ad" stroke-width="1.2"/>
+<path d="M1292 1384 v8 M1304 1384 v8 M1290 1392 h16 v8 h-16 Z M1298 1400 v4" fill="none" stroke="#3973ad" stroke-width="1.6"/>
+<text x="1316" y="1400" font-family="PingFang SC,Arial,sans-serif" font-size="16" font-weight="600" fill="#3973ad" text-anchor="start">插件</text>
+</g>
+<path d="M48 2496 H1532" stroke="#b9cbd9" stroke-width="2"/>
+<path d="M64 2532 L112 2532" fill="none" stroke="#b45e27" stroke-width="2.8"/>
+<polygon points="112,2532 100,2526 100,2538" fill="#b45e27"/>
+<text x="124" y="2540" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#1c3344" text-anchor="start">装配与生命周期控制</text>
+<path d="M440 2532 L488 2532" fill="none" stroke="#3973ad" stroke-width="2.8"/>
+<polygon points="488,2532 476,2526 476,2538" fill="#3973ad"/>
+<text x="500" y="2540" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#1c3344" text-anchor="start">调用 / 数据（双向为交互）</text>
+<path d="M856 2532 L904 2532" fill="none" stroke="#35745b" stroke-width="2.8"/>
+<polygon points="904,2532 892,2526 892,2538" fill="#35745b"/>
+<text x="916" y="2540" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#1c3344" text-anchor="start">effect：登记，退出时撤销</text>
+<path d="M1256.0 2532.0 L1264.0 2532.0 M1270.0 2532.0 L1278.0 2532.0 M1284.0 2532.0 L1292.0 2532.0 M1298.0 2532.0 L1304.0 2532.0" fill="none" stroke="#35745b" stroke-width="2.8"/>
+<polygon points="1304,2532 1292,2526 1292,2538" fill="#35745b"/>
+<text x="1316" y="2540" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#1c3344" text-anchor="start">coeffect：依赖</text>
+<text x="64" y="2584" font-family="PingFang SC,Arial,sans-serif" font-size="20" font-weight="400" fill="#62798c" text-anchor="start">插件实现可由配置替换；Context / Fiber 是框架管理对象。实际替换仍需满足接口与生命周期要求。</text>
+</svg>

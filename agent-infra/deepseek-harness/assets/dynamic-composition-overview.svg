@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="720" viewBox="0 0 1320 720" role="img" aria-labelledby="overview-title overview-desc">
+  <title id="overview-title">动态组合中的依赖响应与影响回收</title>
+  <desc id="overview-desc">正常运行时，tool-todo 依赖 tools 和 sessionProjections 两项服务，并建立工具与投影两项注册。tools 撤出时，Cordis 停用 tool-todo，随后撤销这两项注册。依赖变化的联动是空间可组合性，注册影响的回收是时间可组合性。</desc>
+  <rect width="1320" height="720" fill="#f7f9fb"/>
+  <text x="42" y="55" fill="#1c3344" font-size="30" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">动态组合：依赖变化，影响回收</text>
+
+  <rect x="40" y="90" width="1240" height="268" rx="14" fill="#fff" stroke="#d8e2eb" stroke-width="2"/>
+  <text x="68" y="127" fill="#2f689f" font-size="22" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">正常运行</text>
+
+  <path d="M378 248 H486" fill="none" stroke="#3973ad" stroke-width="3"/>
+  <polygon points="498,248 482,239 482,257" fill="#3973ad"/>
+  <path d="M824 248 H932" fill="none" stroke="#b45e27" stroke-width="3"/>
+  <polygon points="944,248 928,239 928,257" fill="#b45e27"/>
+  <text x="438" y="228" text-anchor="middle" fill="#2f689f" font-size="17" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">提供能力</text>
+  <text x="884" y="228" text-anchor="middle" fill="#aa5725" font-size="17" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">注册</text>
+
+  <rect x="70" y="170" width="308" height="156" rx="11" fill="#eaf2fb" stroke="#94b8db" stroke-width="2"/>
+  <text x="224" y="210" text-anchor="middle" fill="#1c3344" font-size="24" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">所依赖的服务</text>
+  <text x="224" y="251" text-anchor="middle" fill="#3c607c" font-size="21" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">tools</text>
+  <text x="224" y="285" text-anchor="middle" fill="#3c607c" font-size="21" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">sessionProjections</text>
+  <text x="224" y="316" text-anchor="middle" fill="#2f689f" font-size="16" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">coeffects：插件所需</text>
+
+  <rect x="498" y="170" width="326" height="156" rx="11" fill="#f3f6f8" stroke="#aabdc9" stroke-width="2"/>
+  <text x="661" y="222" text-anchor="middle" fill="#1c3344" font-size="27" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">tool-todo</text>
+  <text x="661" y="265" text-anchor="middle" fill="#526c7d" font-size="20" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">插件运行</text>
+  <text x="661" y="302" text-anchor="middle" fill="#526c7d" font-size="17" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">由 Cordis 管理</text>
+
+  <rect x="944" y="170" width="306" height="156" rx="11" fill="#fff1e7" stroke="#dbad88" stroke-width="2"/>
+  <text x="1097" y="210" text-anchor="middle" fill="#1c3344" font-size="24" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">建立的注册</text>
+  <text x="1097" y="251" text-anchor="middle" fill="#895630" font-size="21" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">工具 todo_write</text>
+  <text x="1097" y="285" text-anchor="middle" fill="#895630" font-size="21" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">投影 todos</text>
+  <text x="1097" y="316" text-anchor="middle" fill="#aa5725" font-size="16" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">effects：可撤销的注册</text>
+
+  <rect x="40" y="376" width="1240" height="300" rx="14" fill="#fff" stroke="#d8e2eb" stroke-width="2"/>
+  <text x="68" y="414" fill="#a85628" font-size="22" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">tools 撤出</text>
+
+  <path d="M378 542 H486" fill="none" stroke="#3973ad" stroke-width="3"/>
+  <polygon points="498,542 482,533 482,551" fill="#3973ad"/>
+  <path d="M824 542 H932" fill="none" stroke="#b45e27" stroke-width="3"/>
+  <polygon points="944,542 928,533 928,551" fill="#b45e27"/>
+  <text x="438" y="513" text-anchor="middle" fill="#2f689f" font-size="16" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">空间可组合性</text>
+  <text x="884" y="513" text-anchor="middle" fill="#aa5725" font-size="16" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">时间可组合性</text>
+
+  <rect x="70" y="468" width="308" height="148" rx="11" fill="#eaf2fb" stroke="#94b8db" stroke-width="2"/>
+  <text x="224" y="523" text-anchor="middle" fill="#1c3344" font-size="25" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">tools 不再可用</text>
+  <text x="224" y="567" text-anchor="middle" fill="#3c607c" font-size="20" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">依赖发生变化</text>
+
+  <rect x="498" y="468" width="326" height="148" rx="11" fill="#f3f6f8" stroke="#aabdc9" stroke-width="2"/>
+  <text x="661" y="523" text-anchor="middle" fill="#1c3344" font-size="24" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">Cordis 停用</text>
+  <text x="661" y="567" text-anchor="middle" fill="#526c7d" font-size="20" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">tool-todo</text>
+
+  <rect x="944" y="468" width="306" height="148" rx="11" fill="#fff1e7" stroke="#dbad88" stroke-width="2"/>
+  <text x="1097" y="523" text-anchor="middle" fill="#1c3344" font-size="24" font-weight="700" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">撤销注册</text>
+  <text x="1097" y="567" text-anchor="middle" fill="#895630" font-size="20" font-family="PingFang SC,Hiragino Sans GB,Arial,sans-serif">todo_write · todos</text>
+</svg>

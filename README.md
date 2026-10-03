@@ -8,6 +8,8 @@
 
 ## Agent Infra
 
+- [DeepSeek Harness 思想学习笔记](./agent-infra/deepseek-harness/README.md)：六个单元，以论文为主、源码为辅，理解时空可组合性、Cordis 生命周期与 DSH 插件装配。
+
 - [Agent 沙箱学习笔记](./agent-infra/sandbox/README.md)：12 个独立学习单元，覆盖基础架构、冷启动、预热池、快照与组合策略，另附术语速查和项目引子。
 - [DeepSeek DSec 论文学习笔记](./agent-infra/deepseek-dsec/README.md)：九篇主笔记与 EROFS 附录，梳理沙箱架构、环境层、按需加载、资源管理及 RL 协同。
 
@@ -29,7 +31,8 @@ learning-notes/
 │       └── asyncio/                  # Python asyncio 运行机制专题
 ├── agent-infra/
 │   ├── sandbox/                      # Agent 沙箱专题
-│   └── deepseek-dsec/                # DSec 论文学习笔记
+│   ├── deepseek-dsec/                # DSec 论文学习笔记
+│   └── deepseek-harness/             # Cordis 与 DSH 思想学习笔记
 ├── model-architecture/
 │   └── deepseek-v4.1-flash/          # 模型架构专题
 │       ├── README.md                 # 主题目录与阅读路径
